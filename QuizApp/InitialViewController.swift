@@ -10,19 +10,19 @@ import PureLayout
 import UIKit
 class InitialViewController : UIViewController {
     
-    private var loginButton: UIButton!
-    private var titleLabel: UILabel!
+    private var loginButton: Button!
+    private var titleLabel: TitleLabel!
     private var backgroundColorLighter: UIColor = UIColor.init(hex: "#744FA3FF")!
     private var backgroundColorDarker: UIColor = UIColor.init(hex: "#272F76FF")!
     
-    private let whiteColorTransparent: UIColor = UIColor.init(hex: "#FFFFFF70")!
-    private let mainFontName = "Times New Roman Bold"
-    private var mailTextField:UITextField!
-    private var passwordTextField:UITextField!
+    //private let whiteColorTransparent: UIColor = UIColor.init(hex: "#FFFFFF70")!
+    
+    private var mailTextField:InputField!
+    private var passwordTextField:InputField!
     private var stackView:UIStackView!
     private let stackSpacing:CGFloat = 18.0
     private let globalCornerRadius:CGFloat = 18
-    private let textFieldPadding:CGFloat = 22
+    //private let textFieldPadding:CGFloat = 22
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,27 +42,44 @@ class InitialViewController : UIViewController {
         defineLayoutForViews()
     }
     
+    @objc
+    func customLoginAction () {
+        let dataService = DataService()
+        let mail = mailTextField.text!
+        let password = passwordTextField.text!
+        let status_:LoginStatus = dataService.login(email: mail, password: password)
+        switch status_{
+        case LoginStatus.success:
+            print(mail)
+            print(password)
+            let notifyView = UIView()
+            notifyView.backgroundColor = .green
+            
+        case LoginStatus.error:
+            print(status_)
+        }
+    }
+    
     private func createViews() {
         // title label
-        titleLabel = UILabel()
+        titleLabel = TitleLabel(title: "PopQuiz")
         view.addSubview(titleLabel)
-        titleLabel.text = "PopQuiz"
-        
-        
         
         // mail text field
-        mailTextField = UITextField()
-        mailTextField.attributedPlaceholder =
-            NSAttributedString(string: "Email", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
+        mailTextField = InputField(placeHolder:"Email", isProtected:false)
         
         // password text field
-        passwordTextField = UITextField()
-        passwordTextField.attributedPlaceholder =
-            NSAttributedString(string: "Password", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
+        passwordTextField = InputField(placeHolder: "Password", isProtected: true)
+        
+        mailTextField.addSelectionListener(inputField: passwordTextField)
+        passwordTextField.addSelectionListener(inputField: mailTextField)
         
         // login button
-        loginButton = UIButton()
-        loginButton.setTitle("Login", for: .normal)
+        loginButton = Button(title:"Login")
+        loginButton.addTarget( self , action: #selector(customLoginAction), for : .touchUpInside)
+        
+        passwordTextField.addEmptinessListener(button: loginButton)
+        mailTextField.addEmptinessListener(button: loginButton)
         
         // stack
         stackView = UIStackView()
@@ -81,33 +98,13 @@ class InitialViewController : UIViewController {
     }
     private func styleViews() {
         
-        //setGradientBackground(size: view.frame.size)
-        view.backgroundColor = backgroundColorLighter
-        
-        titleLabel.font = UIFont(name: mainFontName, size: 32)
-        titleLabel.textColor = .white
-        
-        mailTextField.backgroundColor = whiteColorTransparent
-        mailTextField.textColor = .white
-        
-        mailTextField.layer.cornerRadius = globalCornerRadius
-        mailTextField.clipsToBounds = true
-        mailTextField.setLeftPaddingPoints(textFieldPadding)
-        mailTextField.setRightPaddingPoints(textFieldPadding)
+        setGradientBackground(size: view.frame.size)
+        //view.backgroundColor = backgroundColorLighter
         
         
-        passwordTextField.backgroundColor = whiteColorTransparent
-        passwordTextField.textColor = .white
-        passwordTextField.layer.cornerRadius = globalCornerRadius
-        passwordTextField.clipsToBounds = true
-        passwordTextField.setLeftPaddingPoints(textFieldPadding)
-        passwordTextField.setRightPaddingPoints(textFieldPadding)
         
-        loginButton.backgroundColor = .white
-        loginButton.titleLabel!.font = UIFont(name: mainFontName, size: 20)
-        loginButton.setTitleColor(backgroundColorLighter, for: .normal)
-        loginButton.layer.cornerRadius = globalCornerRadius
-        loginButton.clipsToBounds = true
+        
+        
     }
     
     private func defineLayoutForViews() {
@@ -120,7 +117,6 @@ class InitialViewController : UIViewController {
             //loginButton.widthAnchor.constraint(equalToConstant: 300),
             //loginButton.heightAnchor.constraint(equalToConstant: 50),
             //loginButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 150),
-            
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 80)
             
@@ -136,7 +132,7 @@ class InitialViewController : UIViewController {
     
     private func setGradientBackground(size: CGSize){
         let gradientLayer:CAGradientLayer = CAGradientLayer()
-        gradientLayer.frame.size = size
+        gradientLayer.frame.size = CGSize(width: size.height, height: size.height)
         gradientLayer.colors = [backgroundColorLighter.cgColor,backgroundColorDarker.withAlphaComponent(1).cgColor]
         gradientLayer.startPoint = CGPoint(x: 1.0, y: 0.0)
         gradientLayer.endPoint = CGPoint(x: 0.0, y: 1.0)
@@ -172,47 +168,7 @@ extension UIColor {
         return nil
     }
 }
-extension UITextField {
-    func setLeftPaddingPoints(_ amount:CGFloat){
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: self.frame.size.height))
-        self.leftView = paddingView
-        self.leftViewMode = .always
-    }
-    func setRightPaddingPoints(_ amount:CGFloat) {
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: self.frame.size.height))
-        self.rightView = paddingView
-        self.rightViewMode = .always
-    }
-}
 
-class GradientView: UIView {
-    
-    private var backgroundColorLighter: UIColor = UIColor.init(hex: "#744FA3FF")!
-    private var backgroundColorDarker: UIColor = UIColor.init(hex: "#272F76FF")!
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupView()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        setupView()
-    }
-    
-    private func setupView() {
-        autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        
-        guard let theLayer = self.layer as? CAGradientLayer else {
-            return;
-        }
-        
-        theLayer.colors = [backgroundColorLighter.cgColor, backgroundColorDarker.withAlphaComponent(1).cgColor]
-        theLayer.locations = [0.0, 1.0]
-        theLayer.frame = self.bounds
-    }
-    
-    override class var layerClass: AnyClass {
-        return CAGradientLayer.self
-    }
-}
+
+
+
