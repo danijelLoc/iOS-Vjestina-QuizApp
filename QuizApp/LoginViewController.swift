@@ -8,7 +8,7 @@
 import Foundation
 import PureLayout
 import UIKit
-class InitialViewController : UIViewController {
+class LoginViewController : UIViewController {
     
     private var loginButton: Button!
     private var titleLabel: TitleLabel!
@@ -29,13 +29,7 @@ class InitialViewController : UIViewController {
         buildViews()
     }
     
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        coordinator.animate(alongsideTransition: nil, completion: {
-            _ in
-            //self.setGradientBackground(size: size)
-        })
-    }
+
     private func buildViews() {
         createViews()
         styleViews()
@@ -93,7 +87,6 @@ class InitialViewController : UIViewController {
         stackView.addArrangedSubview(passwordTextField)
         stackView.addArrangedSubview(loginButton)
         stackView.spacing = stackSpacing
-        
         
     }
     private func styleViews() {

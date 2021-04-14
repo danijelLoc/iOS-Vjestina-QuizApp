@@ -1,6 +1,6 @@
-enum QuizCategory: String {
+enum QuizCategory: String,CaseIterable {
 
-    case sport = "SPORTS"
-    case science = "SCIENCE"
+    case sport = "Sport"
+    case science = "Science"
 
 }

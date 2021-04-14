@@ -12,7 +12,7 @@ class InputField : UITextField{
     
     private let globalCornerRadius:CGFloat = 18
     private let textFieldPadding:CGFloat = 22
-    
+    private var isProtected:Bool!
     private var selectionListeners:Set<InputField>!
     private var emptinessListeners:Set<Button>!
     
@@ -26,7 +26,7 @@ class InputField : UITextField{
             NSAttributedString(string: placeHolder, attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
         self.selectionListeners = []
         self.emptinessListeners = []
-        
+        self.isProtected = isProtected
         self.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         
         self.style()
@@ -37,7 +37,9 @@ class InputField : UITextField{
         self.backgroundColor = .white
         self.textColor = .white
         self.backgroundColor! = self.backgroundColor!.withAlphaComponent(0.3)
-        
+        if self.isProtected {
+            self.isSecureTextEntry = true
+        }
         self.layer.cornerRadius = globalCornerRadius
         self.clipsToBounds = true
         self.setLeftPaddingPoints(textFieldPadding)

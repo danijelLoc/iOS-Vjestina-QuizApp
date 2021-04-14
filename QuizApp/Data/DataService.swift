@@ -10,7 +10,7 @@ class DataService: DataServiceProtocol {
         [
             Quiz(
                 id: 1,
-                title: "Basic sports knowledges",
+                title: "Basic sports knowledge",
                 description: "This is a quiz for beginners in sport.",
                 category: .sport,
                 level: 1,
