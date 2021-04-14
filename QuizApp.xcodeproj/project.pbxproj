@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5222FE222627331B00B8276C /* TableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5222FE212627331B00B8276C /* TableCell.swift */; };
+		5222FE25262775D500B8276C /* FunFactView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5222FE24262775D500B8276C /* FunFactView.swift */; };
 		522A8D6C2626118A008C7970 /* InputField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522A8D6B2626118A008C7970 /* InputField.swift */; };
 		522A8D70262611A8008C7970 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522A8D6F262611A8008C7970 /* Button.swift */; };
 		522A8D7B26261F21008C7970 /* TitleLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522A8D7A26261F21008C7970 /* TitleLabel.swift */; };
@@ -29,6 +30,7 @@
 /* Begin PBXFileReference section */
 		264F0CF344CD3124D178CCB5 /* Pods_QuizApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_QuizApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5222FE212627331B00B8276C /* TableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableCell.swift; sourceTree = "<group>"; };
+		5222FE24262775D500B8276C /* FunFactView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunFactView.swift; sourceTree = "<group>"; };
 		522A8D6B2626118A008C7970 /* InputField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputField.swift; sourceTree = "<group>"; };
 		522A8D6F262611A8008C7970 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		522A8D7A26261F21008C7970 /* TitleLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleLabel.swift; sourceTree = "<group>"; };
@@ -78,6 +80,7 @@
 				522A8D6F262611A8008C7970 /* Button.swift */,
 				522A8D7A26261F21008C7970 /* TitleLabel.swift */,
 				5222FE212627331B00B8276C /* TableCell.swift */,
+				5222FE24262775D500B8276C /* FunFactView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -263,6 +266,7 @@
 				52CA46ED2621F84100C54DEE /* Quiz.swift in Sources */,
 				522A8D6C2626118A008C7970 /* InputField.swift in Sources */,
 				522A8D7F26264C68008C7970 /* QuizzesViewController.swift in Sources */,
+				5222FE25262775D500B8276C /* FunFactView.swift in Sources */,
 				52B880E6261E0A770020700D /* AppDelegate.swift in Sources */,
 				52CA46EF2621F84100C54DEE /* QuizCategory.swift in Sources */,
 				52B880E8261E0A770020700D /* SceneDelegate.swift in Sources */,

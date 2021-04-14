@@ -14,9 +14,13 @@ class QuizzesViewController : UIViewController{
     
     private var quizButton: Button!
     private var titleLabel: TitleLabel!
+    private var quizContainer:UIView!
     private var quizzesTableView : UITableView!
     private var backgroundColorLighter: UIColor = UIColor.init(hex: "#744FA3FF")!
     private var backgroundColorDarker: UIColor = UIColor.init(hex: "#272F76FF")!
+    private var funFactView : FunFactView!
+    private var factNumber : Int = 0
+    
     
     let dataService : DataService = DataService()
     private var categorisedQuizzes:[[Quiz]] = []
@@ -40,8 +44,8 @@ class QuizzesViewController : UIViewController{
     func customGetQuizzesAction () {
         let allQuizzes = dataService.fetchQuizes()
         
-        
         let categories = [QuizCategory.sport,QuizCategory.science]
+        // categorise quizzes
         let categorisedQuizzes = categories.map { (quizCategory) -> [Quiz] in
             return allQuizzes.filter { (quiz) -> Bool in
                 switch quiz.category{
@@ -52,7 +56,25 @@ class QuizzesViewController : UIViewController{
                 }
             }
         }
+        // get fun fact number
+        var num = 0
+        for quiz in dataService.fetchQuizes(){
+            for question in quiz.questions{
+                if question.question.contains("NBA"){
+                    num = num + 1
+                }
+            }
+        }
         
+        self.factNumber = num
+        // show quizes if there is any
+        if allQuizzes.count != 0 {
+            quizContainer.isHidden = false
+        }else{
+            quizContainer.isHidden = true
+        }
+        
+        self.funFactView.updateDesctiption(description: String(factNumber))
         self.currentCategory = 0
         
         self.categorisedQuizzes = categorisedQuizzes
@@ -72,14 +94,11 @@ class QuizzesViewController : UIViewController{
         view.addSubview(quizButton)
         quizButton.addTarget( self , action: #selector(customGetQuizzesAction), for : .touchUpInside)
         
-        // table view
-        quizzesTableView = UITableView()
-        quizzesTableView.dataSource = self
-        quizzesTableView.delegate = self
-        quizzesTableView.register(TableCell.self, forCellReuseIdentifier: "Cell")
-        quizzesTableView.backgroundColor = quizzesTableView.backgroundColor?.withAlphaComponent(0)
-        quizzesTableView.rowHeight = UITableView.automaticDimension;
-        view.addSubview(quizzesTableView)
+        // container for views if quizzes are avaible
+        quizContainer = UIView()
+        
+        self.initQuizzesViews()
+        quizContainer.isHidden = true
         
     }
     private func styleViews() {
@@ -92,26 +111,66 @@ class QuizzesViewController : UIViewController{
     private func defineLayoutForViews() {
         quizButton.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        quizzesTableView.translatesAutoresizingMaskIntoConstraints = false
-        //quizzesTableView.bottomAnchor.constraint(equalTo:view.bottomAnchor).isActive = true
+        
+        let safeArea = self.view.safeAreaLayoutGuide
         NSLayoutConstraint.activate([
             //button.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            quizButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            quizButton.widthAnchor.constraint(equalToConstant: 311),
-            quizButton.heightAnchor.constraint(equalToConstant: 44),
-            quizButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 150),
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 80),
-            quizzesTableView.topAnchor.constraint(equalTo: quizButton.bottomAnchor, constant: 50),
+            titleLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 10),
+            quizButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            quizButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 60),
+            quizButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -60),
+            quizButton.heightAnchor.constraint(equalToConstant: 44),
+            quizButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 35),
+            
+        ])
+    }
+    
+    private func initQuizzesViews(){
+        view.addSubview(quizContainer)
+        funFactView = FunFactView()
+        funFactView.setMessage(title: "Fun fact", description: String(factNumber))
+        quizContainer.addSubview(funFactView)
+        // table view
+        quizzesTableView = UITableView()
+        quizzesTableView.dataSource = self
+        quizzesTableView.delegate = self
+        quizzesTableView.register(TableCell.self, forCellReuseIdentifier: "Cell")
+        quizzesTableView.backgroundColor = quizzesTableView.backgroundColor?.withAlphaComponent(0)
+        quizzesTableView.rowHeight = UITableView.automaticDimension;
+        quizContainer.addSubview(quizzesTableView)
+        
+        defineQuizzesLayoutForViews()
+    }
+    
+    private func defineQuizzesLayoutForViews() {
+        funFactView.translatesAutoresizingMaskIntoConstraints = false
+        quizzesTableView.translatesAutoresizingMaskIntoConstraints = false
+        quizContainer.translatesAutoresizingMaskIntoConstraints = false
+        let safeArea = self.view.safeAreaLayoutGuide
+        NSLayoutConstraint.activate([
+            quizContainer.topAnchor.constraint(equalTo: quizButton.bottomAnchor, constant: 20),
+            quizContainer.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor,constant: 0),
+            quizContainer.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor,constant: 0),
+            quizContainer.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor,constant: 0),
+            
+            funFactView.centerXAnchor.constraint(equalTo: quizContainer.centerXAnchor),
+            funFactView.leadingAnchor.constraint(equalTo: quizContainer.leadingAnchor,constant: 20),
+            funFactView.trailingAnchor.constraint(equalTo: quizContainer.trailingAnchor,constant: -20),
+            funFactView.heightAnchor.constraint(equalToConstant: 100),
+            funFactView.topAnchor.constraint(equalTo: quizContainer.topAnchor, constant: 0),
+            
+            quizzesTableView.topAnchor.constraint(equalTo: funFactView.bottomAnchor, constant: 10),
             quizzesTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -20),
-            quizzesTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 20),
-            quizzesTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor,constant: -40)
+            quizzesTableView.leadingAnchor.constraint(equalTo: quizContainer.leadingAnchor,constant: 20),
+            quizzesTableView.bottomAnchor.constraint(equalTo: quizContainer.bottomAnchor,constant: -40)
         ])
     }
     
     private func setGradientBackground(size: CGSize){
         let gradientLayer:CAGradientLayer = CAGradientLayer()
-        gradientLayer.frame.size = CGSize(width: size.height, height: size.height)
+        let largerAxis = max(size.height,size.width)
+        gradientLayer.frame.size = CGSize(width: largerAxis, height: largerAxis)
         gradientLayer.colors = [backgroundColorLighter.cgColor,backgroundColorDarker.withAlphaComponent(1).cgColor]
         gradientLayer.startPoint = CGPoint(x: 1.0, y: 0.0)
         gradientLayer.endPoint = CGPoint(x: 0.0, y: 1.0)
@@ -135,7 +194,9 @@ extension QuizzesViewController : UITableViewDataSource ,UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? TableCell else {fatalError("Unable to create TableCell")}
-        cell.setQuiz(quiz: self.categorisedQuizzes[currentCategory][indexPath.row])
+        if(indexPath.row < self.categorisedQuizzes[currentCategory].count){
+            cell.setQuiz(quiz: self.categorisedQuizzes[currentCategory][indexPath.row])
+        }
         if indexPath.row == self.categorisedQuizzes[currentCategory].count-1 && categorisedQuizzes.count-1 > self.currentCategory{
             self.currentCategory = currentCategory + 1
         }

@@ -15,14 +15,12 @@ class LoginViewController : UIViewController {
     private var backgroundColorLighter: UIColor = UIColor.init(hex: "#744FA3FF")!
     private var backgroundColorDarker: UIColor = UIColor.init(hex: "#272F76FF")!
     
-    //private let whiteColorTransparent: UIColor = UIColor.init(hex: "#FFFFFF70")!
     
     private var mailTextField:InputField!
     private var passwordTextField:InputField!
     private var stackView:UIStackView!
     private let stackSpacing:CGFloat = 18.0
     private let globalCornerRadius:CGFloat = 18
-    //private let textFieldPadding:CGFloat = 22
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -101,31 +99,28 @@ class LoginViewController : UIViewController {
     }
     
     private func defineLayoutForViews() {
+        let safeArea = self.view.safeAreaLayoutGuide
         
         loginButton.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
         NSLayoutConstraint.activate([
-            //button.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            //loginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            //loginButton.widthAnchor.constraint(equalToConstant: 300),
-            //loginButton.heightAnchor.constraint(equalToConstant: 50),
-            //loginButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 150),
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 80)
+            titleLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 20)
             
         ])
         
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 150),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 35),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -35),
-            //stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -500)
+            stackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 80),
+            stackView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 40),
+            stackView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -40),
         ])
     }
     
     private func setGradientBackground(size: CGSize){
         let gradientLayer:CAGradientLayer = CAGradientLayer()
-        gradientLayer.frame.size = CGSize(width: size.height, height: size.height)
+        let largerAxis = max(size.height,size.width)
+        gradientLayer.frame.size = CGSize(width: largerAxis, height: largerAxis)
         gradientLayer.colors = [backgroundColorLighter.cgColor,backgroundColorDarker.withAlphaComponent(1).cgColor]
         gradientLayer.startPoint = CGPoint(x: 1.0, y: 0.0)
         gradientLayer.endPoint = CGPoint(x: 0.0, y: 1.0)
