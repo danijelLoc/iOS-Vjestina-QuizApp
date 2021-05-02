@@ -31,35 +31,15 @@ class TableCell : UITableViewCell{
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        createViews()
+        styleCell()
+        setConstraints()
     }
     
     public func setQuiz(quiz:Quiz){
-        createViews()
-        
         self.quiz = quiz
-        self.backgroundColor = UIColor.white.withAlphaComponent(0.3)
-        self.layer.cornerRadius = 18
-        quizImageView.image = UIImage(named:"QuizImage")
-        
-        titleLabel.numberOfLines = 0
-        titleLabel.lineBreakMode = .byWordWrapping
-        titleLabel.text = quiz.title
-        titleLabel.frame.size.width = containerView.frame.width - 24
-        titleLabel.sizeToFit()
-        
-        detailsLabel.numberOfLines = 0
-        detailsLabel.lineBreakMode = .byWordWrapping
         detailsLabel.text = " \(quiz.description) "
-        detailsLabel.frame.size.width = containerView.frame.width - 24
-        detailsLabel.sizeToFit()
-        
-        self.contentView.addSubview(quizImageView)
-        containerView.addSubview(titleLabel)
-        containerView.addSubview(detailsLabel)
-        self.contentView.addSubview(containerView)
-        self.layoutSubviews()
-        
-        setConstraints()
+        titleLabel.text = quiz.title
     }
     
     private func createViews(){
@@ -93,8 +73,29 @@ class TableCell : UITableViewCell{
             view.clipsToBounds = true // this will make sure its children do not go out of the boundary
             return view
         }()
+        
+        quizImageView.image = UIImage(named:"QuizImage")
+        self.contentView.addSubview(quizImageView)
+        containerView.addSubview(titleLabel)
+        containerView.addSubview(detailsLabel)
+        self.contentView.addSubview(containerView)
+        self.layoutSubviews()
     }
     
+    private func styleCell(){
+        titleLabel.numberOfLines = 0
+        titleLabel.lineBreakMode = .byWordWrapping
+        titleLabel.frame.size.width = containerView.frame.width - 24
+        titleLabel.sizeToFit()
+        
+        detailsLabel.numberOfLines = 0
+        detailsLabel.lineBreakMode = .byWordWrapping
+        detailsLabel.frame.size.width = containerView.frame.width - 24
+        detailsLabel.sizeToFit()
+        
+        self.backgroundColor = UIColor.white.withAlphaComponent(0.3)
+        self.layer.cornerRadius = 18
+    }
     
     private func setConstraints(){
         quizImageView.centerYAnchor.constraint(equalTo:self.contentView.centerYAnchor).isActive = true

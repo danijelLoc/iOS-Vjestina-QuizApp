@@ -9,6 +9,11 @@ import Foundation
 import PureLayout
 import UIKit
 class QuizzesViewController : UIViewController{
+    // TODO ##########################################################
+    // razmak između čelija
+    // u header stviti pozadinu jer je sticky -- vise nije sticky ... good?
+    // guard kod dohvacanja texta iz textFielda u logiinu!!
+    // ###############################################################
     
     
     
@@ -24,7 +29,6 @@ class QuizzesViewController : UIViewController{
     
     let dataService : DataService = DataService()
     private var categorisedQuizzes:[[Quiz]] = []
-    private var currentCategory:Int = 0
     
     private let stackSpacing:CGFloat = 18.0
     private let globalCornerRadius:CGFloat = 18
@@ -58,7 +62,7 @@ class QuizzesViewController : UIViewController{
         }
         // get fun fact number
         var num = 0
-        for quiz in dataService.fetchQuizes(){
+        for quiz in allQuizzes{
             for question in quiz.questions{
                 if question.question.contains("NBA"){
                     num = num + 1
@@ -75,7 +79,6 @@ class QuizzesViewController : UIViewController{
         }
         
         self.funFactView.updateDesctiption(description: String(factNumber))
-        self.currentCategory = 0
         
         self.categorisedQuizzes = categorisedQuizzes
         self.quizzesTableView.reloadData()
@@ -132,7 +135,7 @@ class QuizzesViewController : UIViewController{
         funFactView.setMessage(title: "Fun fact", description: String(factNumber))
         quizContainer.addSubview(funFactView)
         // table view
-        quizzesTableView = UITableView()
+        quizzesTableView = UITableView(frame: .zero, style: .grouped)
         quizzesTableView.dataSource = self
         quizzesTableView.delegate = self
         quizzesTableView.register(TableCell.self, forCellReuseIdentifier: "Cell")
@@ -194,13 +197,10 @@ extension QuizzesViewController : UITableViewDataSource ,UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? TableCell else {fatalError("Unable to create TableCell")}
-        if(indexPath.row < self.categorisedQuizzes[currentCategory].count){
-            cell.setQuiz(quiz: self.categorisedQuizzes[currentCategory][indexPath.row])
+        let section = indexPath.section
+        if(indexPath.row < self.categorisedQuizzes[section].count){
+            cell.setQuiz(quiz: self.categorisedQuizzes[section][indexPath.row])
         }
-        if indexPath.row == self.categorisedQuizzes[currentCategory].count-1 && categorisedQuizzes.count-1 > self.currentCategory{
-            self.currentCategory = currentCategory + 1
-        }
-        //print(indexPath.row)
         return cell
     }
     
@@ -212,9 +212,7 @@ extension QuizzesViewController : UITableViewDataSource ,UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView(frame:CGRect(x:0,y:0,width: tableView.frame.width,height: 70))
         
-        //self.quizzes = self.categorisedQuizzes[section]
-        headerView.backgroundColor = .clear
-        
+        //headerView.backgroundColor = .clear
         let categoryName = UILabel(frame:CGRect(x:20,y:30,width: headerView.frame.width,height: 30))
         categoryName.text = categorisedQuizzes[section][0].category.rawValue
         if section % 2 == 0{
@@ -224,6 +222,7 @@ extension QuizzesViewController : UITableViewDataSource ,UITableViewDelegate {
         }
         categoryName.font = UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.bold)
         headerView.addSubview(categoryName)
+        
         return headerView
     }
     
