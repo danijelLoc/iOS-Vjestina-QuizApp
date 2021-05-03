@@ -15,6 +15,7 @@ class InputField : UITextField{
     private var isProtected:Bool!
     private var selectionListeners:Set<InputField>!
     private var emptinessListeners:Set<Button>!
+    private var invalid:Bool = false
     
     required init ?(coder: NSCoder ) {
         fatalError ( "init(coder:) has not been implemented" )
@@ -27,6 +28,7 @@ class InputField : UITextField{
         self.selectionListeners = []
         self.emptinessListeners = []
         self.isProtected = isProtected
+        self.autocapitalizationType = .none
         self.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         
         self.style()
@@ -52,6 +54,7 @@ class InputField : UITextField{
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         // if selected TODO
         super.touchesBegan(touches, with: event)
+        self.layer.borderColor = UIColor.white.cgColor
         self.layer.borderWidth = 1
         self.notifySelectionListeners()
     }
@@ -74,6 +77,12 @@ class InputField : UITextField{
     
     public func addEmptinessListener(button:Button){
         self.emptinessListeners.insert(button)
+    }
+    
+    public func showInvalid(){
+        self.layer.borderColor = UIColor.red.cgColor
+        self.layer.borderWidth = 1
+
     }
     
     func notifySelectionListeners(){

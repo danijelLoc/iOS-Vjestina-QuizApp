@@ -10,16 +10,14 @@ import UIKit
 
 class TitleLabel:UILabel{
     
-    private let mainFont = UIFont.systemFont(ofSize: 32, weight: UIFont.Weight.bold)
-    
     required init ?(coder: NSCoder ) {
         fatalError ( "init(coder:) has not been implemented" )
     }
     
-    init(title:String){
+    init(title:String, size:CGFloat = 32){
         super.init(frame: CGRect.zero)
         self.text = title
-        self.font = mainFont
+        self.font = UIFont.systemFont(ofSize: size, weight: UIFont.Weight.bold)
         self.textColor = .white
     }
 }

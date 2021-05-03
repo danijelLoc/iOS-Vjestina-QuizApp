@@ -103,16 +103,19 @@ class TableCell : UITableViewCell{
         quizImageView.widthAnchor.constraint(equalToConstant:100).isActive = true
         quizImageView.heightAnchor.constraint(equalToConstant:100).isActive = true
         
+        
         containerView.centerYAnchor.constraint(equalTo:self.contentView.centerYAnchor).isActive = true
         containerView.leadingAnchor.constraint(equalTo:self.quizImageView.trailingAnchor, constant:10).isActive = true
         containerView.trailingAnchor.constraint(equalTo:self.contentView.trailingAnchor, constant:-10).isActive = true
         containerView.heightAnchor.constraint(equalToConstant:143).isActive = true
+        
         
         titleLabel.topAnchor.constraint(equalTo:self.containerView.topAnchor,constant: 20).isActive = true
         titleLabel.leadingAnchor.constraint(equalTo:self.containerView.leadingAnchor, constant: 10).isActive = true
         titleLabel.bottomAnchor.constraint(equalTo:self.containerView.bottomAnchor, constant: -60).isActive = true
         titleLabel.trailingAnchor.constraint(equalTo:self.containerView.trailingAnchor, constant: 10).isActive = true
         //titleLabel.trailingAnchor.constraint(equalTo:self.containerView.trailingAnchor).isActive = true
+        
         
         detailsLabel.topAnchor.constraint(equalTo:self.titleLabel.bottomAnchor, constant: 10).isActive = true
         detailsLabel.leadingAnchor.constraint(equalTo:self.containerView.leadingAnchor, constant: 10).isActive = true

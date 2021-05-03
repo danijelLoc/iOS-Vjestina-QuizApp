@@ -15,23 +15,23 @@ class QuizzesViewController : UIViewController{
     // guard kod dohvacanja texta iz textFielda u logiinu!!
     // ###############################################################
     
-    
-    
     private var quizButton: Button!
     private var titleLabel: TitleLabel!
     private var quizContainer:UIView!
     private var quizzesTableView : UITableView!
-    private var backgroundColorLighter: UIColor = UIColor.init(hex: "#744FA3FF")!
-    private var backgroundColorDarker: UIColor = UIColor.init(hex: "#272F76FF")!
     private var funFactView : FunFactView!
     private var factNumber : Int = 0
-    
-    
+    private var router: AppRouterProtocol!
     let dataService : DataService = DataService()
     private var categorisedQuizzes:[[Quiz]] = []
-    
     private let stackSpacing:CGFloat = 18.0
     private let globalCornerRadius:CGFloat = 18
+    
+
+    convenience init(router: AppRouterProtocol) {
+        self.init()
+        self.router = router
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,7 +47,6 @@ class QuizzesViewController : UIViewController{
     @objc
     func customGetQuizzesAction () {
         let allQuizzes = dataService.fetchQuizes()
-        
         let categories = [QuizCategory.sport,QuizCategory.science]
         // categorise quizzes
         let categorisedQuizzes = categories.map { (quizCategory) -> [Quiz] in
@@ -79,7 +78,6 @@ class QuizzesViewController : UIViewController{
         }
         
         self.funFactView.updateDesctiption(description: String(factNumber))
-        
         self.categorisedQuizzes = categorisedQuizzes
         self.quizzesTableView.reloadData()
         self.quizzesTableView.reloadInputViews()
@@ -93,7 +91,6 @@ class QuizzesViewController : UIViewController{
         
         // get quizzes button
         quizButton = Button(title:"Get Quiz")
-        quizButton.enable()
         view.addSubview(quizButton)
         quizButton.addTarget( self , action: #selector(customGetQuizzesAction), for : .touchUpInside)
         
@@ -104,11 +101,27 @@ class QuizzesViewController : UIViewController{
         quizContainer.isHidden = true
         
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        // bacause even empty navigation bar takes up space
+        self.navigationController!.navigationBar.isHidden = true
+        super.viewWillAppear(animated)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        self.navigationController!.navigationBar.isHidden = false
+        super.viewWillDisappear(animated)
+    }
+    
+    
     private func styleViews() {
         
         setGradientBackground(size: view.frame.size)
-        //view.backgroundColor = backgroundColorLighter
         
+        self.navigationController!.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationController!.navigationBar.shadowImage = UIImage()
+        self.navigationController!.navigationBar.barStyle = .black
+        self.navigationController?.navigationBar.isHidden = true
     }
     
     private func defineLayoutForViews() {
@@ -169,17 +182,6 @@ class QuizzesViewController : UIViewController{
             quizzesTableView.bottomAnchor.constraint(equalTo: quizContainer.bottomAnchor,constant: -40)
         ])
     }
-    
-    private func setGradientBackground(size: CGSize){
-        let gradientLayer:CAGradientLayer = CAGradientLayer()
-        let largerAxis = max(size.height,size.width)
-        gradientLayer.frame.size = CGSize(width: largerAxis, height: largerAxis)
-        gradientLayer.colors = [backgroundColorLighter.cgColor,backgroundColorDarker.withAlphaComponent(1).cgColor]
-        gradientLayer.startPoint = CGPoint(x: 1.0, y: 0.0)
-        gradientLayer.endPoint = CGPoint(x: 0.0, y: 1.0)
-        //Use diffrent colors
-        view.layer.insertSublayer(gradientLayer, at: 0)
-    }
 }
 
 
@@ -215,11 +217,10 @@ extension QuizzesViewController : UITableViewDataSource ,UITableViewDelegate {
         //headerView.backgroundColor = .clear
         let categoryName = UILabel(frame:CGRect(x:20,y:30,width: headerView.frame.width,height: 30))
         categoryName.text = categorisedQuizzes[section][0].category.rawValue
-        if section % 2 == 0{
-            categoryName.textColor = .yellow
-        }else{
-            categoryName.textColor = UIColor(hex: "#56CCF2FF")
-        }
+        
+        let colors = [UIColor.yellow, UIColor(hex: "#56CCF2FF"), UIColor.red, UIColor.green]
+        categoryName.textColor = colors[section % colors.count]
+        
         categoryName.font = UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.bold)
         headerView.addSubview(categoryName)
         
@@ -232,7 +233,9 @@ extension QuizzesViewController : UITableViewDataSource ,UITableViewDelegate {
     }
     
     func tableView ( _ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
+        let selected_quiz = categorisedQuizzes[indexPath.section][indexPath.row]
         tableView.deselectRow(at: indexPath, animated: true )
+        router.showQuizScreen(quiz: selected_quiz)
     }
     
 }

@@ -12,15 +12,17 @@ class LoginViewController : UIViewController {
     
     private var loginButton: Button!
     private var titleLabel: TitleLabel!
-    private var backgroundColorLighter: UIColor = UIColor.init(hex: "#744FA3FF")!
-    private var backgroundColorDarker: UIColor = UIColor.init(hex: "#272F76FF")!
-    
-    
     private var mailTextField:InputField!
     private var passwordTextField:InputField!
     private var stackView:UIStackView!
     private let stackSpacing:CGFloat = 18.0
     private let globalCornerRadius:CGFloat = 18
+    private var router: AppRouterProtocol!
+    
+    convenience init(router: AppRouterProtocol) {
+        self.init()
+        self.router = router
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,11 +46,11 @@ class LoginViewController : UIViewController {
         case LoginStatus.success:
             print(mail)
             print(password)
-            let notifyView = UIView()
-            notifyView.backgroundColor = .green
-            
+            self.router.quizzesControllerAsRootAndShow()
         case LoginStatus.error:
             print(status_)
+            mailTextField.showInvalid()
+            passwordTextField.showInvalid()
         }
     }
     
@@ -68,6 +70,7 @@ class LoginViewController : UIViewController {
         
         // login button
         loginButton = Button(title:"Login")
+        loginButton.disable()
         loginButton.addTarget( self , action: #selector(customLoginAction), for : .touchUpInside)
         
         passwordTextField.addEmptinessListener(button: loginButton)
@@ -89,12 +92,9 @@ class LoginViewController : UIViewController {
     }
     private func styleViews() {
         
-        setGradientBackground(size: view.frame.size)
-        //view.backgroundColor = backgroundColorLighter
-        
-        
-        
-        
+        self.setGradientBackground(size: view.frame.size)
+        self.navigationController!.navigationBar.isHidden = true
+        self.navigationController?.navigationBar.barStyle = .black
         
     }
     
@@ -109,7 +109,6 @@ class LoginViewController : UIViewController {
             titleLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 20)
             
         ])
-        
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 80),
             stackView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 40),
@@ -117,7 +116,15 @@ class LoginViewController : UIViewController {
         ])
     }
     
-    private func setGradientBackground(size: CGSize){
+
+}
+
+extension UIViewController{
+
+    public func setGradientBackground(size: CGSize){
+        let backgroundColorLighter: UIColor = UIColor.init(hex: "#744FA3FF")!
+        let backgroundColorDarker: UIColor = UIColor.init(hex: "#272F76FF")!
+        
         let gradientLayer:CAGradientLayer = CAGradientLayer()
         let largerAxis = max(size.height,size.width)
         gradientLayer.frame.size = CGSize(width: largerAxis, height: largerAxis)

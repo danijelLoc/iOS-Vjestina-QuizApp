@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5200CFD12640527000D524FF /* AnswerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5200CFD02640526F00D524FF /* AnswerButton.swift */; };
+		52011B7A263F046F00710E23 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52011B79263F046F00710E23 /* AppRouter.swift */; };
+		52011B7F263F0C8C00710E23 /* QuizViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52011B7E263F0C8C00710E23 /* QuizViewController.swift */; };
 		5222FE222627331B00B8276C /* TableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5222FE212627331B00B8276C /* TableCell.swift */; };
 		5222FE25262775D500B8276C /* FunFactView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5222FE24262775D500B8276C /* FunFactView.swift */; };
 		522A8D6C2626118A008C7970 /* InputField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522A8D6B2626118A008C7970 /* InputField.swift */; };
@@ -30,6 +33,9 @@
 
 /* Begin PBXFileReference section */
 		264F0CF344CD3124D178CCB5 /* Pods_QuizApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_QuizApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5200CFD02640526F00D524FF /* AnswerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerButton.swift; sourceTree = "<group>"; };
+		52011B79263F046F00710E23 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
+		52011B7E263F0C8C00710E23 /* QuizViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizViewController.swift; sourceTree = "<group>"; };
 		5222FE212627331B00B8276C /* TableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableCell.swift; sourceTree = "<group>"; };
 		5222FE24262775D500B8276C /* FunFactView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunFactView.swift; sourceTree = "<group>"; };
 		522A8D6B2626118A008C7970 /* InputField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputField.swift; sourceTree = "<group>"; };
@@ -75,6 +81,24 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		52011B78263F045400710E23 /* Coordinator */ = {
+			isa = PBXGroup;
+			children = (
+				52011B79263F046F00710E23 /* AppRouter.swift */,
+			);
+			path = Coordinator;
+			sourceTree = "<group>";
+		};
+		52011B7D263F075800710E23 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				52CA46D32621ED9300C54DEE /* LoginViewController.swift */,
+				522A8D7E26264C68008C7970 /* QuizzesViewController.swift */,
+				52011B7E263F0C8C00710E23 /* QuizViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
 		522A8D6A26261124008C7970 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -84,6 +108,7 @@
 				5222FE212627331B00B8276C /* TableCell.swift */,
 				5222FE24262775D500B8276C /* FunFactView.swift */,
 				5240B8E2262798C90022354A /* ErrorView.swift */,
+				5200CFD02640526F00D524FF /* AnswerButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -109,6 +134,8 @@
 		52B880E4261E0A770020700D /* QuizApp */ = {
 			isa = PBXGroup;
 			children = (
+				52011B7D263F075800710E23 /* Controllers */,
+				52011B78263F045400710E23 /* Coordinator */,
 				522A8D6A26261124008C7970 /* Views */,
 				52CA46D92621F6D600C54DEE /* Data */,
 				52B880E5261E0A770020700D /* AppDelegate.swift */,
@@ -116,8 +143,6 @@
 				52B880EE261E0A7B0020700D /* Assets.xcassets */,
 				52B880F0261E0A7B0020700D /* LaunchScreen.storyboard */,
 				52B880F3261E0A7B0020700D /* Info.plist */,
-				52CA46D32621ED9300C54DEE /* LoginViewController.swift */,
-				522A8D7E26264C68008C7970 /* QuizzesViewController.swift */,
 			);
 			path = QuizApp;
 			sourceTree = "<group>";
@@ -279,7 +304,10 @@
 				5222FE222627331B00B8276C /* TableCell.swift in Sources */,
 				522A8D7B26261F21008C7970 /* TitleLabel.swift in Sources */,
 				52CA46E62621F7CB00C54DEE /* DataService.swift in Sources */,
+				52011B7F263F0C8C00710E23 /* QuizViewController.swift in Sources */,
+				52011B7A263F046F00710E23 /* AppRouter.swift in Sources */,
 				522A8D70262611A8008C7970 /* Button.swift in Sources */,
+				5200CFD12640527000D524FF /* AnswerButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
