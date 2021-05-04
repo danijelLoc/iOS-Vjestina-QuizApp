@@ -105,6 +105,7 @@ class QuizzesViewController : UIViewController{
     override func viewWillAppear(_ animated: Bool) {
         // bacause even empty navigation bar takes up space
         self.navigationController!.navigationBar.isHidden = true
+        self.navigationController?.navigationBar.barStyle = .black
         super.viewWillAppear(animated)
     }
     
@@ -118,9 +119,9 @@ class QuizzesViewController : UIViewController{
         
         setGradientBackground(size: view.frame.size)
         
-        self.navigationController!.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        self.navigationController!.navigationBar.shadowImage = UIImage()
-        self.navigationController!.navigationBar.barStyle = .black
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.barStyle = .black
         self.navigationController?.navigationBar.isHidden = true
     }
     

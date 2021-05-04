@@ -28,7 +28,16 @@ class AppRouter: AppRouterProtocol {
     func setStartScreen(in window: UIWindow?) {
         let qvc = QuizzesViewController(router: self)
         let lvc = LoginViewController(router: self)
-        navigationController.pushViewController(qvc, animated: false)
+        let svc = SettingsViewController(router: self)
+        
+        qvc.tabBarItem = UITabBarItem(title: "Quiz", image: .add, selectedImage: .add)
+        svc.tabBarItem = UITabBarItem(title: "Settings", image: .checkmark, selectedImage:
+        .checkmark)
+        
+        let tabBarController = UITabBarController()
+        tabBarController.viewControllers = [qvc,svc]
+        
+        navigationController.pushViewController(tabBarController, animated: false)
         navigationController.pushViewController(lvc, animated: false)
         
         window?.rootViewController = navigationController

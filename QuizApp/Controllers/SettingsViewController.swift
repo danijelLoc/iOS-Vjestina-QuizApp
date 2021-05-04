@@ -63,6 +63,13 @@ class SettingsViewController : UIViewController {
         
         nameLabel.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         nameLabel.textColor = .white
+        
+        logOutButton.setTitleColor(UIColor(hex: "#FC6565FF"), for: .normal)
+        
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.barStyle = .black
+        self.navigationController?.navigationBar.isHidden = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -84,7 +91,10 @@ class SettingsViewController : UIViewController {
             
             nameLabel.topAnchor.constraint(equalTo: usernameLabel.bottomAnchor, constant: 20),
             nameLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 30),
-            logOutButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: 30)
+            logOutButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -30),
+            logOutButton.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor, constant: 0),
+            logOutButton.widthAnchor.constraint(equalToConstant: 300),
+            logOutButton.heightAnchor.constraint(equalToConstant: 40)
         ])
         
         
