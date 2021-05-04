@@ -134,10 +134,9 @@ class QuizzesViewController : UIViewController{
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             titleLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 10),
             quizButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            quizButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 60),
-            quizButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -60),
-            quizButton.heightAnchor.constraint(equalToConstant: 44),
-            quizButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 35),
+            quizButton.widthAnchor.constraint(equalToConstant: 300),
+            quizButton.heightAnchor.constraint(equalTo: safeArea.heightAnchor, multiplier: 0.07),
+            quizButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 30),
             
         ])
     }
@@ -165,7 +164,7 @@ class QuizzesViewController : UIViewController{
         quizContainer.translatesAutoresizingMaskIntoConstraints = false
         let safeArea = self.view.safeAreaLayoutGuide
         NSLayoutConstraint.activate([
-            quizContainer.topAnchor.constraint(equalTo: quizButton.bottomAnchor, constant: 20),
+            quizContainer.topAnchor.constraint(equalTo: quizButton.bottomAnchor, constant: 10),
             quizContainer.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor,constant: 0),
             quizContainer.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor,constant: 0),
             quizContainer.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor,constant: 0),
@@ -176,8 +175,8 @@ class QuizzesViewController : UIViewController{
             funFactView.heightAnchor.constraint(equalToConstant: 100),
             funFactView.topAnchor.constraint(equalTo: quizContainer.topAnchor, constant: 0),
             
-            quizzesTableView.topAnchor.constraint(equalTo: funFactView.bottomAnchor, constant: 10),
-            quizzesTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -20),
+            quizzesTableView.topAnchor.constraint(equalTo: funFactView.bottomAnchor, constant: 0),
+            quizzesTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -10),
             quizzesTableView.leadingAnchor.constraint(equalTo: quizContainer.leadingAnchor,constant: 20),
             quizzesTableView.bottomAnchor.constraint(equalTo: quizContainer.bottomAnchor,constant: -40)
         ])

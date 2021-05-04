@@ -13,9 +13,12 @@ protocol AppRouterProtocol {
     func quizzesControllerAsRootAndShow()
     func showQuizScreen(quiz:Quiz)
     func returnToQuizzes()
+    func showResultScreen(result: QuizResult)
+    func logOut()
 }
 
 class AppRouter: AppRouterProtocol {
+    
     private let navigationController: UINavigationController!
     
     init(navigationController: UINavigationController) {
@@ -48,5 +51,14 @@ class AppRouter: AppRouterProtocol {
     
     func returnToQuizzes(){
         self.navigationController?.popToRootViewController(animated: true)
+    }
+    
+    func showResultScreen(result:QuizResult){
+        let rvc = QuizResultViewController(router: self, result: result)
+        self.navigationController?.pushViewController(rvc, animated: true)
+    }
+    
+    func logOut() {
+        
     }
 }

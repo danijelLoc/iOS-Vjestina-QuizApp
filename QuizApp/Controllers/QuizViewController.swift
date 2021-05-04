@@ -98,9 +98,8 @@ class QuizViewController : UIViewController {
             
         }
         else{
-            router.returnToQuizzes()
-            let results = 2
-            // TODO add results screen
+            let result = QuizResult(correctAnswers: correctAnswers, numberOfQuestions: quiz.questions.count)
+            router.showResultScreen(result: result)
         }
         
     }
@@ -114,11 +113,12 @@ class QuizViewController : UIViewController {
         let correctAnswer:Int = quiz.questions[currentQuestion].correctAnswer
         if answer == correctAnswer {
             answerButtons[answer].markCorrect()
+            correctAnswers += 1
         }else{
             answerButtons[answer].markIncorrect()
             answerButtons[correctAnswer].markCorrect()
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             self.updateQuestion()
         }
     }
@@ -136,7 +136,7 @@ class QuizViewController : UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        navigationController?.setNavigationBarHidden(false, animated: animated)
+        self.navigationController!.navigationBar.isHidden = false
         super.viewWillAppear(animated)
     }
  
