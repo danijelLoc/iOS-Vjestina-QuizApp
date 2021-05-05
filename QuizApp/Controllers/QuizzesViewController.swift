@@ -11,7 +11,6 @@ import UIKit
 class QuizzesViewController : UIViewController{
     // TODO ##########################################################
     // razmak između čelija
-    // u header stviti pozadinu jer je sticky -- vise nije sticky ... good?
     // guard kod dohvacanja texta iz textFielda u logiinu!!
     // ###############################################################
     
@@ -63,20 +62,14 @@ class QuizzesViewController : UIViewController{
         var num = 0
         for quiz in allQuizzes{
             for question in quiz.questions{
-                if question.question.contains("NBA"){
-                    num = num + 1
-                }
+                if question.question.contains("NBA") { num = num + 1 }
             }
         }
-        
         self.factNumber = num
         // show quizes if there is any
-        if allQuizzes.count != 0 {
-            quizContainer.isHidden = false
-        }else{
-            quizContainer.isHidden = true
-        }
-        
+        if allQuizzes.count != 0 { quizContainer.isHidden = false }
+        else { quizContainer.isHidden = true }
+        // update elements
         self.funFactView.updateDesctiption(description: String(factNumber))
         self.categorisedQuizzes = categorisedQuizzes
         self.quizzesTableView.reloadData()
@@ -87,7 +80,6 @@ class QuizzesViewController : UIViewController{
         // title label
         titleLabel = TitleLabel(title: "PopQuiz")
         view.addSubview(titleLabel)
-        
         
         // get quizzes button
         quizButton = Button(title:"Get Quiz")

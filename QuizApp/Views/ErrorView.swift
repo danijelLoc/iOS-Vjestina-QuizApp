@@ -6,36 +6,14 @@
 //
 
 import Foundation
-
-
-//
-//  FunFactView.swift
-//  QuizApp
-//
-//  Created by Five on 14.04.2021..
-//
-
-import Foundation
-
-//
-//  TableCell.swift
-//  QuizApp
-//
-//  Created by Five on 14.04.2021..
-//
-
-import Foundation
 import UIKit
 
 class ErrorView : UIView{
-    
-    //private var quiz:Quiz!
     
     var quizImageView:UIImageView!
     var titleLabel:UILabel!
     var detailsLabel:UILabel!
     var containerView:UIView!
-    
     
     required init ?(coder: NSCoder ) {
         fatalError ( "init(coder:) has not been implemented" )
@@ -44,8 +22,6 @@ class ErrorView : UIView{
     override init(frame: CGRect) {
         super.init(frame: frame)
     }
-    
-    
     
     public func setUp(){
         createViews()

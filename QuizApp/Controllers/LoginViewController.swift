@@ -46,7 +46,7 @@ class LoginViewController : UIViewController {
         case LoginStatus.success:
             print(mail)
             print(password)
-            self.router.quizzesControllerAsRootAndShow()
+            self.router.quizzesControllerAsRootAndShow(in: view.window)
         case LoginStatus.error:
             print(status_)
             mailTextField.showInvalid()
@@ -95,7 +95,6 @@ class LoginViewController : UIViewController {
         self.setGradientBackground(size: view.frame.size)
         self.navigationController!.navigationBar.isHidden = true
         self.navigationController?.navigationBar.barStyle = .black
-        
     }
     
     private func defineLayoutForViews() {
@@ -115,8 +114,6 @@ class LoginViewController : UIViewController {
             stackView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -40),
         ])
     }
-    
-
 }
 
 extension UIViewController{

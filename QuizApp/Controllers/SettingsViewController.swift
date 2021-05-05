@@ -50,7 +50,7 @@ class SettingsViewController : UIViewController {
     }
     
     @objc func handleLogOut() {
-        router.logOut()
+        router.logOut(in: self.view.window)
     }
     
     private func styleViews() {

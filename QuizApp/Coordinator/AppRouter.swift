@@ -10,11 +10,11 @@ import UIKit
 
 protocol AppRouterProtocol {
     func setStartScreen(in window: UIWindow?)
-    func quizzesControllerAsRootAndShow()
+    func quizzesControllerAsRootAndShow(in window: UIWindow?)
     func showQuizScreen(quiz:Quiz)
     func returnToQuizzes()
     func showResultScreen(result: QuizResult)
-    func logOut()
+    func logOut(in window: UIWindow?)
 }
 
 class AppRouter: AppRouterProtocol {
@@ -26,34 +26,44 @@ class AppRouter: AppRouterProtocol {
     }
     
     func setStartScreen(in window: UIWindow?) {
-        let qvc = QuizzesViewController(router: self)
         let lvc = LoginViewController(router: self)
-        let svc = SettingsViewController(router: self)
         
-        qvc.tabBarItem = UITabBarItem(title: "Quiz", image: .add, selectedImage: .add)
-        svc.tabBarItem = UITabBarItem(title: "Settings", image: .checkmark, selectedImage:
-        .checkmark)
+        navigationController.pushViewController(lvc, animated: true)
+        
+        window?.rootViewController = navigationController
+        window?.makeKeyAndVisible()
+        // REVERT TO lvc ############
+        // ########################## skipping login
+        // ###################### remove this
+        // quizzesControllerAsRootAndShow(in: window)
+    }
+    
+    func showQuizzes(in window: UIWindow?){
+        let qvc = QuizzesViewController(router: self)
+        let svc = SettingsViewController(router: self)
+
+        qvc.tabBarItem = UITabBarItem(title: "Quiz", image: UIImage(named:"Clock"), selectedImage: UIImage(named: "Clock")?.withTintColor(.red))
+        svc.tabBarItem = UITabBarItem(title: "Settings", image: UIImage(named:"Settings"), selectedImage: UIImage(named:"Settings")?.withTintColor(.blue))
         
         let tabBarController = UITabBarController()
         tabBarController.viewControllers = [qvc,svc]
         
-        navigationController.pushViewController(tabBarController, animated: false)
-        navigationController.pushViewController(lvc, animated: false)
+        navigationController.pushViewController(tabBarController, animated: true)
         
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
-        let aaaa = 3;
-        // REVERT TO lvc ############
-        // ##########################
-        // ######################remove
-        navigationController.popToRootViewController(animated: false)
     }
     
-    func quizzesControllerAsRootAndShow(){
-        navigationController.popToRootViewController(animated: false)
+    func quizzesControllerAsRootAndShow(in window: UIWindow?){
+        let newNavigationController = UINavigationController()
+        let newAppRouter = AppRouter(navigationController: newNavigationController)
+        newAppRouter.showQuizzes(in: window)
     }
     
     func showQuizScreen(quiz:Quiz) {
+//        let qc = QuizViewController(router: self, quiz: quiz)
+//        self.navigationController?.pushViewController(qc, animated: true)
+        print("$$")
         let qc = QuizViewController(router: self, quiz: quiz)
         self.navigationController?.pushViewController(qc, animated: true)
     }
@@ -67,7 +77,9 @@ class AppRouter: AppRouterProtocol {
         self.navigationController?.pushViewController(rvc, animated: true)
     }
     
-    func logOut() {
-        
+    func logOut(in window: UIWindow?) {
+        let navigationController = UINavigationController()
+        let appRouter = AppRouter(navigationController: navigationController)
+        appRouter.setStartScreen(in: window)
     }
 }

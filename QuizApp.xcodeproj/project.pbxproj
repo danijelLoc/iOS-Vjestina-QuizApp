@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		5200CFD12640527000D524FF /* AnswerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5200CFD02640526F00D524FF /* AnswerButton.swift */; };
 		52011B7A263F046F00710E23 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52011B79263F046F00710E23 /* AppRouter.swift */; };
-		52011B7F263F0C8C00710E23 /* QuizViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52011B7E263F0C8C00710E23 /* QuizViewController.swift */; };
+		52011B7F263F0C8C00710E23 /* QuestionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52011B7E263F0C8C00710E23 /* QuestionViewController.swift */; };
 		5222FE222627331B00B8276C /* TableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5222FE212627331B00B8276C /* TableCell.swift */; };
 		5222FE25262775D500B8276C /* FunFactView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5222FE24262775D500B8276C /* FunFactView.swift */; };
 		522A8D6C2626118A008C7970 /* InputField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522A8D6B2626118A008C7970 /* InputField.swift */; };
@@ -17,6 +17,7 @@
 		522A8D7B26261F21008C7970 /* TitleLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522A8D7A26261F21008C7970 /* TitleLabel.swift */; };
 		522A8D7F26264C68008C7970 /* QuizzesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522A8D7E26264C68008C7970 /* QuizzesViewController.swift */; };
 		5240B8E3262798C90022354A /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5240B8E2262798C90022354A /* ErrorView.swift */; };
+		526DB72B2642EF0400D0FC4E /* QuizViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 526DB72A2642EF0400D0FC4E /* QuizViewController.swift */; };
 		52B880E6261E0A770020700D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B880E5261E0A770020700D /* AppDelegate.swift */; };
 		52B880E8261E0A770020700D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B880E7261E0A770020700D /* SceneDelegate.swift */; };
 		52B880EF261E0A7B0020700D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 52B880EE261E0A7B0020700D /* Assets.xcassets */; };
@@ -37,7 +38,7 @@
 		264F0CF344CD3124D178CCB5 /* Pods_QuizApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_QuizApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5200CFD02640526F00D524FF /* AnswerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerButton.swift; sourceTree = "<group>"; };
 		52011B79263F046F00710E23 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
-		52011B7E263F0C8C00710E23 /* QuizViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizViewController.swift; sourceTree = "<group>"; };
+		52011B7E263F0C8C00710E23 /* QuestionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionViewController.swift; sourceTree = "<group>"; };
 		5222FE212627331B00B8276C /* TableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableCell.swift; sourceTree = "<group>"; };
 		5222FE24262775D500B8276C /* FunFactView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunFactView.swift; sourceTree = "<group>"; };
 		522A8D6B2626118A008C7970 /* InputField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputField.swift; sourceTree = "<group>"; };
@@ -45,6 +46,7 @@
 		522A8D7A26261F21008C7970 /* TitleLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleLabel.swift; sourceTree = "<group>"; };
 		522A8D7E26264C68008C7970 /* QuizzesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizzesViewController.swift; sourceTree = "<group>"; };
 		5240B8E2262798C90022354A /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
+		526DB72A2642EF0400D0FC4E /* QuizViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizViewController.swift; sourceTree = "<group>"; };
 		52B880E2261E0A770020700D /* QuizApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuizApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		52B880E5261E0A770020700D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		52B880E7261E0A770020700D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -98,9 +100,10 @@
 			children = (
 				52CA46D32621ED9300C54DEE /* LoginViewController.swift */,
 				522A8D7E26264C68008C7970 /* QuizzesViewController.swift */,
-				52011B7E263F0C8C00710E23 /* QuizViewController.swift */,
+				52011B7E263F0C8C00710E23 /* QuestionViewController.swift */,
 				52F28C5A2641831D00C71665 /* QuizResultViewController.swift */,
 				52F28C5D2641972C00C71665 /* SettingsViewController.swift */,
+				526DB72A2642EF0400D0FC4E /* QuizViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -311,9 +314,10 @@
 				5222FE222627331B00B8276C /* TableCell.swift in Sources */,
 				522A8D7B26261F21008C7970 /* TitleLabel.swift in Sources */,
 				52CA46E62621F7CB00C54DEE /* DataService.swift in Sources */,
-				52011B7F263F0C8C00710E23 /* QuizViewController.swift in Sources */,
+				52011B7F263F0C8C00710E23 /* QuestionViewController.swift in Sources */,
 				52F28C5B2641831D00C71665 /* QuizResultViewController.swift in Sources */,
 				52011B7A263F046F00710E23 /* AppRouter.swift in Sources */,
+				526DB72B2642EF0400D0FC4E /* QuizViewController.swift in Sources */,
 				522A8D70262611A8008C7970 /* Button.swift in Sources */,
 				5200CFD12640527000D524FF /* AnswerButton.swift in Sources */,
 			);
