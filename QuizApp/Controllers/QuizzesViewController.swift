@@ -117,23 +117,6 @@ class QuizzesViewController : UIViewController{
         self.navigationController?.navigationBar.isHidden = true
     }
     
-    private func defineLayoutForViews() {
-        quizButton.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        let safeArea = self.view.safeAreaLayoutGuide
-        NSLayoutConstraint.activate([
-            //button.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            titleLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 10),
-            quizButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            quizButton.widthAnchor.constraint(equalToConstant: 300),
-            quizButton.heightAnchor.constraint(equalTo: safeArea.heightAnchor, multiplier: 0.07),
-            quizButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 30),
-            
-        ])
-    }
-    
     private func initQuizzesViews(){
         view.addSubview(quizContainer)
         funFactView = FunFactView()
@@ -149,6 +132,23 @@ class QuizzesViewController : UIViewController{
         quizContainer.addSubview(quizzesTableView)
         
         defineQuizzesLayoutForViews()
+    }
+    
+    private func defineLayoutForViews() {
+        quizButton.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        let safeArea = self.view.safeAreaLayoutGuide
+        NSLayoutConstraint.activate([
+            //button.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            titleLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 10),
+            quizButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            quizButton.widthAnchor.constraint(equalToConstant: 300),
+            quizButton.heightAnchor.constraint(equalTo: safeArea.heightAnchor, multiplier: 0.07),
+            quizButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 30),
+            
+        ])
     }
     
     private func defineQuizzesLayoutForViews() {

@@ -28,9 +28,7 @@ class InputField : UITextField{
         self.selectionListeners = []
         self.emptinessListeners = []
         self.isProtected = isProtected
-        self.autocapitalizationType = .none
         self.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
-        
         self.style()
     }
     
@@ -42,6 +40,8 @@ class InputField : UITextField{
         if self.isProtected {
             self.isSecureTextEntry = true
         }
+        self.autocapitalizationType = .none
+        self.autocorrectionType = .no
         self.layer.cornerRadius = globalCornerRadius
         self.clipsToBounds = true
         self.setLeftPaddingPoints(textFieldPadding)

@@ -55,16 +55,13 @@ class QuestionViewController : UIViewController {
         //self.navigationItem.leftBarButtonItem = newBackButton
         self.navigationController?.navigationBar.topItem?.backBarButtonItem = backButton
         
-        
         questionLabel = UILabel()
-        
         questionLabel.numberOfLines = 0
         questionLabel.lineBreakMode = .byWordWrapping
         questionLabel.text = question.question
         questionLabel.frame.size.width = view.frame.width - 30
         questionLabel.sizeToFit()
-        //questionLabel.backgroundColor = .red
-        
+
         view.addSubview(questionLabel)
         createButtons()
         
@@ -86,23 +83,6 @@ class QuestionViewController : UIViewController {
             answerButtons[i].addTarget(self, action: #selector(self.handleAnswerButton(_:)), for: .touchUpInside)
         }
     }
-    
-//    func updateQuestion(){
-//        if currentQuestion < quiz.questions.count - 1{
-//            currentQuestion += 1
-//            questionLabel.text = quiz.questions[currentQuestion].question
-//            for i in 0..<4{
-//                answerButtons[i].backgroundColor = UIColor.white.withAlphaComponent(0.3)
-//                answerButtons[i].setTitle(quiz.questions[currentQuestion].answers[i], for: .normal)
-//            }
-//
-//        }
-//        else{
-//            let result = QuizResult(correctAnswers: correctAnswers, numberOfQuestions: quiz.questions.count)
-//            router.showResultScreen(result: result)
-//        }
-//
-//    }
     
     @objc func handleReturnButton() {
         router.returnToQuizzes()

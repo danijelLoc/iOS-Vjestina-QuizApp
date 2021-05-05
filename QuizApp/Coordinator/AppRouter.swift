@@ -61,9 +61,6 @@ class AppRouter: AppRouterProtocol {
     }
     
     func showQuizScreen(quiz:Quiz) {
-//        let qc = QuizViewController(router: self, quiz: quiz)
-//        self.navigationController?.pushViewController(qc, animated: true)
-        print("$$")
         let qc = QuizViewController(router: self, quiz: quiz)
         self.navigationController?.pushViewController(qc, animated: true)
     }

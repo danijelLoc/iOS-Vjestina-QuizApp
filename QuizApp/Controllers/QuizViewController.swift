@@ -55,7 +55,6 @@ class QuizViewController: UIPageViewController {
         if result {
             correctAnswers += 1
         }
-        print(displayedIndex)
         if displayedIndex < self.quiz.questions.count - 1 {
             displayedIndex += 1
             setViewControllers([controllers[displayedIndex]], direction: .forward, animated: true,completion: nil)
