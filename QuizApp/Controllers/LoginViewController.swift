@@ -14,15 +14,16 @@ class LoginViewController : UIViewController {
     private var titleLabel: TitleLabel!
     private var mailTextField:InputField!
     private var passwordTextField:InputField!
-    private var togglePasswordButton:UIButton!
+    private var passwordToggleIconView:UIImageView!
     private var stackView:UIStackView!
     private let stackSpacing:CGFloat = 18.0
     private let globalCornerRadius:CGFloat = 18
     private var router: AppRouterProtocol!
     private var dataService:DataService!
-    private var passwordToggleIconView:UIImageView!
+
     private let showPasswordImg = UIImage(named: "Show")?.withTintColor(.white, renderingMode: .alwaysOriginal)
     private let hidePasswordImg = UIImage(named: "Hide")?.withTintColor(.white, renderingMode: .alwaysOriginal)
+    
     
     convenience init(router: AppRouterProtocol) {
         self.init()
@@ -105,7 +106,6 @@ class LoginViewController : UIViewController {
 
     
     private func addPasswordToggle(){
-        togglePasswordButton = UIButton(type: .custom)
         passwordTextField.rightViewMode = .unlessEditing
         
         passwordToggleIconView = {
@@ -119,8 +119,10 @@ class LoginViewController : UIViewController {
         }()
         
         passwordTextField.addSubview(passwordToggleIconView)
-        passwordTextField.rightView = togglePasswordButton
-        togglePasswordButton.addTarget(self, action: #selector(togglePasswordVisibility), for: UIControl.Event.touchDown)
+        let singleTap = UITapGestureRecognizer(target: self, action: #selector(self.togglePasswordVisibility))
+        //passwordTextField.rightView = passwordToggleIconView
+        passwordToggleIconView.addGestureRecognizer(singleTap)
+        passwordToggleIconView.isUserInteractionEnabled = true
         passwordTextField.rightViewMode = .always
     }
     
@@ -171,7 +173,7 @@ class LoginViewController : UIViewController {
             
             passwordToggleIconView.heightAnchor.constraint(equalToConstant: 30),
             passwordToggleIconView.widthAnchor.constraint(equalToConstant: 30),
-            passwordToggleIconView.trailingAnchor.constraint(equalTo: passwordTextField.trailingAnchor,constant: -10),
+            passwordToggleIconView.trailingAnchor.constraint(equalTo: passwordTextField.trailingAnchor,constant: -5),
             passwordToggleIconView.centerYAnchor.constraint(equalTo: passwordTextField.centerYAnchor,constant: 0)
         ])
     }

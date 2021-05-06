@@ -83,7 +83,6 @@ class FunFactView : UIView{
         }()
         containerView = {
             let view = UIView()
-            //view.backgroundColor = .green
             view.translatesAutoresizingMaskIntoConstraints = false
             view.clipsToBounds = true // this will make sure its children do not go out of the boundary
             return view

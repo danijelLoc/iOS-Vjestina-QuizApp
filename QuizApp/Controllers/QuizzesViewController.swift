@@ -26,10 +26,6 @@ class QuizzesViewController : UIViewController{
     convenience init(router: AppRouterProtocol) {
         self.init()
         self.router = router
-        let todo = -1
-        // TODO ##########################################################
-        // show password
-        // ###############################################################
     }
     
     override func viewDidLoad() {
@@ -167,7 +163,7 @@ class QuizzesViewController : UIViewController{
             funFactView.topAnchor.constraint(equalTo: quizContainer.topAnchor, constant: 0),
             
             quizzesTableView.topAnchor.constraint(equalTo: funFactView.bottomAnchor, constant: 0),
-            quizzesTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -10),
+            quizzesTableView.trailingAnchor.constraint(equalTo: quizContainer.trailingAnchor,constant: -10),
             quizzesTableView.leadingAnchor.constraint(equalTo: quizContainer.leadingAnchor,constant: 10),
             quizzesTableView.bottomAnchor.constraint(equalTo: quizContainer.bottomAnchor,constant: -20)
         ])
@@ -192,7 +188,7 @@ extension QuizzesViewController : UITableViewDataSource ,UITableViewDelegate {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? TableCell else {fatalError("Unable to create TableCell")}
         let section = indexPath.section
         if(indexPath.row < self.categorisedQuizzes[section].count){
-            cell.setQuiz(quiz: self.categorisedQuizzes[section][indexPath.row])
+            cell.setQuiz(quiz: self.categorisedQuizzes[section][indexPath.row], section: section)
         }
         return cell
     }
@@ -210,8 +206,7 @@ extension QuizzesViewController : UITableViewDataSource ,UITableViewDelegate {
         let categoryName = UILabel(frame:CGRect(x:20,y:30,width: headerView.frame.width,height: 30))
         categoryName.text = categorisedQuizzes[section][0].category.rawValue
         
-        let colors = [UIColor.yellow, UIColor(hex: "#56CCF2FF"), UIColor.red, UIColor.green]
-        categoryName.textColor = colors[section % colors.count]
+        categoryName.textColor = sectionColors[section % sectionColors.count]
         
         categoryName.font = UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.bold)
         headerView.addSubview(categoryName)
@@ -227,7 +222,6 @@ extension QuizzesViewController : UITableViewDataSource ,UITableViewDelegate {
     
     func tableView ( _ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
         let selected_quiz = categorisedQuizzes[indexPath.section][indexPath.row]
-//        tableView.deselectRow(at: indexPath, animated: true )
         router.showQuizScreen(quiz: selected_quiz)
     }
     

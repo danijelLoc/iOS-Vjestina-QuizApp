@@ -22,7 +22,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let navigationController = UINavigationController()
         let appRouter = AppRouter(navigationController: navigationController)
-        //let loginViewController = LoginViewController(router: appRouter)
+        
         appRouter.setStartScreen(in: window)
         
     }

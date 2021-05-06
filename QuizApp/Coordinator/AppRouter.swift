@@ -45,10 +45,8 @@ class AppRouter: AppRouterProtocol {
         
         let tabBarController = UITabBarController()
         tabBarController.viewControllers = [qvc,svc]
-        
         tabBarController.tabBar.tintColor = backgroundColorDarker
         tabBarController.tabBar.barTintColor = .white
-        
         navigationController.pushViewController(tabBarController, animated: true)
         
         window?.rootViewController = navigationController

@@ -76,8 +76,6 @@ class QuizResultViewController : UIViewController {
             finishButton.heightAnchor.constraint(equalToConstant: 44),
             finishButton.widthAnchor.constraint(equalToConstant: 300),
             finishButton.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor, constant: 0),
-//            finishButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 30),
-//            finishButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 30),
         ])
         
         

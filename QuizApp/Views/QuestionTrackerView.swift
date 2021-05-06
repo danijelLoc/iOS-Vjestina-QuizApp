@@ -56,7 +56,6 @@ class QuestionTrackerView : UIView{
         progressStack.alignment = .fill
         progressStack.distribution = .fillEqually
         progressStack.translatesAutoresizingMaskIntoConstraints = false
-        //progressStack.backgroundColor = .green
         self.addSubview(progressStack)
         populateProgressStack()
         

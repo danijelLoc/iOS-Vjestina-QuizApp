@@ -11,11 +11,14 @@ import UIKit
 class TableCell : UITableViewCell{
     
     var quiz:Quiz!
+    var globalContainerView:UIView!
+    var containerView:UIView!
     var quizImageView:UIImageView!
     var titleLabel:UILabel!
     var detailsLabel:UILabel!
-    var containerView:UIView!
-    var globalContainerView:UIView!
+    var ratingStack:UIStackView!
+    var section:Int!
+    var ratingStars:[UIImageView] = []
     
     required init ?(coder: NSCoder ) {
         fatalError ( "init(coder:) has not been implemented" )
@@ -29,10 +32,22 @@ class TableCell : UITableViewCell{
         setConstraints()
     }
     
-    public func setQuiz(quiz:Quiz){
+    public func setQuiz(quiz:Quiz, section: Int){
         self.quiz = quiz
         detailsLabel.text = " \(quiz.description) "
         titleLabel.text = quiz.title
+        self.section = section
+        setRating()
+    }
+    
+    private func setRating(){
+        for i in 0..<3{
+            if i < quiz.level{
+                ratingStars[i].tintColor = sectionColors[section % sectionColors.count]
+            }else{
+                ratingStars[i].tintColor = .white
+            }
+        }
     }
     
     private func createViews(){
@@ -73,6 +88,19 @@ class TableCell : UITableViewCell{
             view.clipsToBounds = true // this will make sure its children do not go out of the boundary
             return view
         }()
+        ratingStack = {
+            let sv = UIStackView()
+            sv.axis = .horizontal
+            sv.translatesAutoresizingMaskIntoConstraints = false
+            sv.distribution = .equalSpacing
+            for _ in 0..<3{
+                let star = UIImageView(image: UIImage(systemName: "rhombus.fill"))
+                star.contentMode = .scaleAspectFit
+                ratingStars.append(star)
+                sv.addArrangedSubview(star)
+            }
+            return sv
+        }()
         
         quizImageView.image = UIImage(named:"QuizImage")
         
@@ -80,6 +108,7 @@ class TableCell : UITableViewCell{
         globalContainerView.addSubview(quizImageView)
         containerView.addSubview(titleLabel)
         containerView.addSubview(detailsLabel)
+        containerView.addSubview(ratingStack)
         self.contentView.addSubview(containerView)
         self.layoutSubviews()
     }
@@ -97,16 +126,11 @@ class TableCell : UITableViewCell{
         detailsLabel.frame.size.width = containerView.frame.width - 24
         detailsLabel.sizeToFit()
         
+        ratingStack.backgroundColor = .clear
+        
         self.backgroundColor = .clear
         globalContainerView.backgroundColor = UIColor.white.withAlphaComponent(0.3)
         globalContainerView.layer.cornerRadius = 18
-        
-        layoutSubviews()
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10))
     }
     
     private func setConstraints(){
@@ -129,13 +153,14 @@ class TableCell : UITableViewCell{
         titleLabel.topAnchor.constraint(equalTo:self.containerView.topAnchor,constant: 20),
         titleLabel.leadingAnchor.constraint(equalTo:self.containerView.leadingAnchor, constant: 10),
         titleLabel.bottomAnchor.constraint(equalTo:self.containerView.bottomAnchor, constant: -60),
-        titleLabel.trailingAnchor.constraint(equalTo:self.containerView.trailingAnchor, constant: 10),
-        //titleLabel.trailingAnchor.constraint(equalTo:self.containerView.trailingAnchor),
-        
+        titleLabel.trailingAnchor.constraint(equalTo:self.containerView.trailingAnchor, constant: -10),
         detailsLabel.topAnchor.constraint(equalTo:self.titleLabel.bottomAnchor, constant: 10),
         detailsLabel.leadingAnchor.constraint(equalTo:self.containerView.leadingAnchor, constant: 10),
         detailsLabel.bottomAnchor.constraint(equalTo:self.containerView.bottomAnchor, constant: -10),
         detailsLabel.trailingAnchor.constraint(equalTo:self.containerView.trailingAnchor, constant: 10),
+        
+        ratingStack.topAnchor.constraint(equalTo:self.containerView.topAnchor,constant: 20),
+        ratingStack.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -10)
         ])
     }
     

@@ -12,6 +12,8 @@ public let backgroundColorLighter: UIColor = UIColor.init(hex:"#744FA3FF")!
 public let backgroundColorDarker: UIColor = UIColor.init(hex:"#272F76FF")!
 public let customRed:UIColor = UIColor(hex: "#FC6565FF")!
 public let customGreen:UIColor = UIColor(hex: "#6FCF97FF")!
+public let sectionColors:[UIColor] = [UIColor.yellow, UIColor(hex: "#56CCF2FF")!, UIColor.red, UIColor.green]
+
 
 extension UITextField {
     func setLeftPaddingPoints(_ amount:CGFloat){
@@ -26,6 +28,7 @@ extension UITextField {
     }
 }
 
+
 extension UIViewController{
 
     public func setGradientBackground(size: CGSize){
@@ -39,6 +42,7 @@ extension UIViewController{
         view.layer.insertSublayer(gradientLayer, at: 0)
     }
 }
+
 
 extension UIColor {
     public convenience init?(hex: String) {

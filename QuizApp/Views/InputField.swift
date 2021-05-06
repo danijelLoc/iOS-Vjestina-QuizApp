@@ -42,12 +42,11 @@ class InputField : UITextField{
         self.layer.cornerRadius = globalCornerRadius
         self.clipsToBounds = true
         self.setLeftPaddingPoints(textFieldPadding)
-        self.setRightPaddingPoints(textFieldPadding)
+        self.setRightPaddingPoints(isProtected ? textFieldPadding*2 : textFieldPadding)
         self.layer.borderColor = UIColor.white.cgColor
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        // if selected TODO
         super.touchesBegan(touches, with: event)
         self.layer.borderColor = UIColor.white.cgColor
         self.layer.borderWidth = 1
