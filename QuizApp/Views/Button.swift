@@ -10,8 +10,7 @@ import UIKit
 
 class Button: UIButton{
     private let globalCornerRadius:CGFloat = 18
-    private var backgroundColorLighter: UIColor = UIColor.init(hex: "#744FA3FF")!
-    
+
     required init ?(coder: NSCoder ) {
         fatalError ( "init(coder:) has not been implemented" )
     }

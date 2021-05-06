@@ -10,9 +10,7 @@ import PureLayout
 import UIKit
 class QuestionViewController : UIViewController {
 
-    private var backgroundColorLighter: UIColor = UIColor.init(hex:"#744FA3FF")!
-    private var backgroundColorDarker: UIColor = UIColor.init(hex:"#272F76FF")!
-    
+
     var backButton:UIBarButtonItem!
     private var stackView:UIStackView!
     private let stackSpacing:CGFloat = 18.0

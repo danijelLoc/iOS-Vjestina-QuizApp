@@ -9,10 +9,6 @@ import Foundation
 import PureLayout
 import UIKit
 class QuizzesViewController : UIViewController{
-    // TODO ##########################################################
-    // razmak između čelija
-    // guard kod dohvacanja texta iz textFielda u logiinu!!
-    // ###############################################################
     
     private var quizButton: Button!
     private var titleLabel: TitleLabel!
@@ -30,6 +26,10 @@ class QuizzesViewController : UIViewController{
     convenience init(router: AppRouterProtocol) {
         self.init()
         self.router = router
+        let todo = -1
+        // TODO ##########################################################
+        // show password
+        // ###############################################################
     }
     
     override func viewDidLoad() {
@@ -98,6 +98,7 @@ class QuizzesViewController : UIViewController{
         funFactView = FunFactView()
         funFactView.setMessage(title: "Fun fact", description: String(factNumber))
         quizContainer.addSubview(funFactView)
+        
         // table view
         quizzesTableView = UITableView(frame: .zero, style: .grouped)
         quizzesTableView.dataSource = self
@@ -113,7 +114,6 @@ class QuizzesViewController : UIViewController{
     private func styleViews() {
         
         setGradientBackground(size: view.frame.size)
-        
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.barStyle = .black
@@ -122,7 +122,7 @@ class QuizzesViewController : UIViewController{
     
     override func viewWillAppear(_ animated: Bool) {
         // bacause even empty navigation bar takes up space
-        self.navigationController!.navigationBar.isHidden = true
+        self.navigationController?.navigationBar.isHidden = true
         self.navigationController?.navigationBar.barStyle = .black
         super.viewWillAppear(animated)
     }
@@ -168,8 +168,8 @@ class QuizzesViewController : UIViewController{
             
             quizzesTableView.topAnchor.constraint(equalTo: funFactView.bottomAnchor, constant: 0),
             quizzesTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -10),
-            quizzesTableView.leadingAnchor.constraint(equalTo: quizContainer.leadingAnchor,constant: 20),
-            quizzesTableView.bottomAnchor.constraint(equalTo: quizContainer.bottomAnchor,constant: -40)
+            quizzesTableView.leadingAnchor.constraint(equalTo: quizContainer.leadingAnchor,constant: 10),
+            quizzesTableView.bottomAnchor.constraint(equalTo: quizContainer.bottomAnchor,constant: -20)
         ])
     }
 }
@@ -179,13 +179,14 @@ class QuizzesViewController : UIViewController{
 extension QuizzesViewController : UITableViewDataSource ,UITableViewDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        //print(self.quizzes.count)
         return self.categorisedQuizzes.count
     }
+    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.categorisedQuizzes[section].count
     }
+    
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? TableCell else {fatalError("Unable to create TableCell")}
@@ -195,6 +196,7 @@ extension QuizzesViewController : UITableViewDataSource ,UITableViewDelegate {
         }
         return cell
     }
+    
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 140
@@ -222,9 +224,10 @@ extension QuizzesViewController : UITableViewDataSource ,UITableViewDelegate {
         return 70
     }
     
+    
     func tableView ( _ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
         let selected_quiz = categorisedQuizzes[indexPath.section][indexPath.row]
-        tableView.deselectRow(at: indexPath, animated: true )
+//        tableView.deselectRow(at: indexPath, animated: true )
         router.showQuizScreen(quiz: selected_quiz)
     }
     

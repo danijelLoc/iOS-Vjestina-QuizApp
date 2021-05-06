@@ -25,28 +25,29 @@ class AppRouter: AppRouterProtocol {
         self.navigationController = navigationController
     }
     
+    
     func setStartScreen(in window: UIWindow?) {
         let lvc = LoginViewController(router: self)
-        
         navigationController.pushViewController(lvc, animated: true)
         
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
-        // REVERT TO lvc ############
-        // ########################## skipping login
-        // ###################### remove this
-        //quizzesControllerAsRootAndShow(in: window)
     }
+    
     
     func showQuizzes(in window: UIWindow?){
         let qvc = QuizzesViewController(router: self)
         let svc = SettingsViewController(router: self)
-
-        qvc.tabBarItem = UITabBarItem(title: "Quiz", image: UIImage(named:"Clock"), selectedImage: UIImage(named: "Clock")?.withTintColor(.red))
-        svc.tabBarItem = UITabBarItem(title: "Settings", image: UIImage(named:"Settings"), selectedImage: UIImage(named:"Settings")?.withTintColor(.blue))
+        
+        // tabBar
+        qvc.tabBarItem = UITabBarItem(title: "Quiz", image: UIImage(named:"Clock"), selectedImage: UIImage(named: "ClockSelected"))
+        svc.tabBarItem = UITabBarItem(title: "Settings", image: UIImage(named:"Settings"), selectedImage: UIImage(named:"SettingsSelected"))
         
         let tabBarController = UITabBarController()
         tabBarController.viewControllers = [qvc,svc]
+        
+        tabBarController.tabBar.tintColor = backgroundColorDarker
+        tabBarController.tabBar.barTintColor = .white
         
         navigationController.pushViewController(tabBarController, animated: true)
         
@@ -54,25 +55,30 @@ class AppRouter: AppRouterProtocol {
         window?.makeKeyAndVisible()
     }
     
+    
     func quizzesControllerAsRootAndShow(in window: UIWindow?){
         let newNavigationController = UINavigationController()
         let newAppRouter = AppRouter(navigationController: newNavigationController)
         newAppRouter.showQuizzes(in: window)
     }
     
+    
     func showQuizScreen(quiz:Quiz) {
         let qc = QuizViewController(router: self, quiz: quiz)
         self.navigationController?.pushViewController(qc, animated: true)
     }
     
+    
     func returnToQuizzes(){
         self.navigationController?.popToRootViewController(animated: true)
     }
+    
     
     func showResultScreen(result:QuizResult){
         let rvc = QuizResultViewController(router: self, result: result)
         self.navigationController?.pushViewController(rvc, animated: true)
     }
+    
     
     func logOut(in window: UIWindow?) {
         let navigationController = UINavigationController()

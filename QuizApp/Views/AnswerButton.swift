@@ -10,7 +10,6 @@ import UIKit
 
 class AnswerButton: UIButton{
     private let globalCornerRadius:CGFloat = 18
-    private var backgroundColorLighter: UIColor = UIColor.init(hex: "#744FA3FF")!
     public var index: Int!
     
     required init ?(coder: NSCoder ) {
@@ -47,11 +46,11 @@ class AnswerButton: UIButton{
     }
     
     func markCorrect(){
-        self.backgroundColor = UIColor(hex: "#6FCF97FF")
+        self.backgroundColor = customGreen
     }
     
     func markIncorrect(){
-        self.backgroundColor = UIColor(hex: "#FC6565FF")
+        self.backgroundColor = customRed
     }
     
 }

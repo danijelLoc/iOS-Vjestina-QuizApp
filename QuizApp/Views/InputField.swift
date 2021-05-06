@@ -33,13 +33,10 @@ class InputField : UITextField{
     }
     
     func style(){
-        
         self.backgroundColor = .white
         self.textColor = .white
         self.backgroundColor! = self.backgroundColor!.withAlphaComponent(0.3)
-        if self.isProtected {
-            self.isSecureTextEntry = true
-        }
+        self.isSecureTextEntry = isProtected ? true : false
         self.autocapitalizationType = .none
         self.autocorrectionType = .no
         self.layer.cornerRadius = globalCornerRadius
@@ -47,8 +44,6 @@ class InputField : UITextField{
         self.setLeftPaddingPoints(textFieldPadding)
         self.setRightPaddingPoints(textFieldPadding)
         self.layer.borderColor = UIColor.white.cgColor
-        
-        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -111,21 +106,5 @@ class InputField : UITextField{
             }
         }
     }
-    
-    
 }
-
-extension UITextField {
-    func setLeftPaddingPoints(_ amount:CGFloat){
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: self.frame.size.height))
-        self.leftView = paddingView
-        self.leftViewMode = .always
-    }
-    func setRightPaddingPoints(_ amount:CGFloat) {
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: self.frame.size.height))
-        self.rightView = paddingView
-        self.rightViewMode = .always
-    }
-}
-
 

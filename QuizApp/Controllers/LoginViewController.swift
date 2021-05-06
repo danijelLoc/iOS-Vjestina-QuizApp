@@ -14,14 +14,20 @@ class LoginViewController : UIViewController {
     private var titleLabel: TitleLabel!
     private var mailTextField:InputField!
     private var passwordTextField:InputField!
+    private var togglePasswordButton:UIButton!
     private var stackView:UIStackView!
     private let stackSpacing:CGFloat = 18.0
     private let globalCornerRadius:CGFloat = 18
     private var router: AppRouterProtocol!
+    private var dataService:DataService!
+    private var passwordToggleIconView:UIImageView!
+    private let showPasswordImg = UIImage(named: "Show")?.withTintColor(.white, renderingMode: .alwaysOriginal)
+    private let hidePasswordImg = UIImage(named: "Hide")?.withTintColor(.white, renderingMode: .alwaysOriginal)
     
     convenience init(router: AppRouterProtocol) {
         self.init()
         self.router = router
+        self.dataService = DataService()
     }
     
     override func viewDidLoad() {
@@ -38,9 +44,12 @@ class LoginViewController : UIViewController {
     
     @objc
     func customLoginAction () {
-        let dataService = DataService()
-        let mail = mailTextField.text!
-        let password = passwordTextField.text!
+        guard
+            let mail = mailTextField.text,
+            let password = passwordTextField.text
+        else {
+            return
+        }
         let status_:LoginStatus = dataService.login(email: mail, password: password)
         switch status_{
         case LoginStatus.success:
@@ -52,6 +61,8 @@ class LoginViewController : UIViewController {
             mailTextField.showInvalid()
             passwordTextField.showInvalid()
         }
+        
+        
     }
     
     private func createViews() {
@@ -88,7 +99,55 @@ class LoginViewController : UIViewController {
         stackView.addArrangedSubview(loginButton)
         stackView.spacing = stackSpacing
         
+        // password visibility toggle
+        addPasswordToggle()
     }
+
+    
+    private func addPasswordToggle(){
+        togglePasswordButton = UIButton(type: .custom)
+        passwordTextField.rightViewMode = .unlessEditing
+        
+        passwordToggleIconView = {
+            let iv = UIImageView(frame: CGRect(x: 0, y: 0, width: 15, height: 15))
+            iv.contentMode = .scaleAspectFill
+            iv.translatesAutoresizingMaskIntoConstraints = false // enable autolayout
+            iv.layer.cornerRadius = 12
+            iv.clipsToBounds = true
+            iv.image = showPasswordImg
+            return iv
+        }()
+        
+        passwordTextField.addSubview(passwordToggleIconView)
+        passwordTextField.rightView = togglePasswordButton
+        togglePasswordButton.addTarget(self, action: #selector(togglePasswordVisibility), for: UIControl.Event.touchDown)
+        passwordTextField.rightViewMode = .always
+    }
+    
+    // imported method :)
+    @objc func togglePasswordVisibility() {
+        passwordTextField.isSecureTextEntry = !passwordTextField.isSecureTextEntry
+        passwordToggleIconView.image = passwordTextField.isSecureTextEntry ? showPasswordImg : hidePasswordImg
+
+        if let existingText = passwordTextField.text, passwordTextField.isSecureTextEntry {
+            /* When toggling to secure text, all text will be purged if the user
+             continues typing unless we intervene. This is prevented by first
+             deleting the existing text and then recovering the original text. */
+            passwordTextField.deleteBackward()
+
+            if let textRange = passwordTextField.textRange(from: passwordTextField.beginningOfDocument, to: passwordTextField.endOfDocument) {
+                passwordTextField.replace(textRange, withText: existingText)
+            }
+        }
+
+        /* Reset the selected text range since the cursor can end up in the wrong
+         position after a toggle because the text might vary in width */
+        if let existingSelectedTextRange = passwordTextField.selectedTextRange {
+            passwordTextField.selectedTextRange = nil
+            passwordTextField.selectedTextRange = existingSelectedTextRange
+        }
+    }
+    
     private func styleViews() {
         
         self.setGradientBackground(size: view.frame.size)
@@ -104,61 +163,21 @@ class LoginViewController : UIViewController {
         
         NSLayoutConstraint.activate([
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            titleLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 20)
+            titleLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 20),
             
-        ])
-        NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 80),
             stackView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 40),
             stackView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -40),
+            
+            passwordToggleIconView.heightAnchor.constraint(equalToConstant: 30),
+            passwordToggleIconView.widthAnchor.constraint(equalToConstant: 30),
+            passwordToggleIconView.trailingAnchor.constraint(equalTo: passwordTextField.trailingAnchor,constant: -10),
+            passwordToggleIconView.centerYAnchor.constraint(equalTo: passwordTextField.centerYAnchor,constant: 0)
         ])
     }
 }
 
-extension UIViewController{
 
-    public func setGradientBackground(size: CGSize){
-        let backgroundColorLighter: UIColor = UIColor.init(hex: "#744FA3FF")!
-        let backgroundColorDarker: UIColor = UIColor.init(hex: "#272F76FF")!
-        
-        let gradientLayer:CAGradientLayer = CAGradientLayer()
-        let largerAxis = max(size.height,size.width)
-        gradientLayer.frame.size = CGSize(width: largerAxis, height: largerAxis)
-        gradientLayer.colors = [backgroundColorLighter.cgColor,backgroundColorDarker.withAlphaComponent(1).cgColor]
-        gradientLayer.startPoint = CGPoint(x: 1.0, y: 0.0)
-        gradientLayer.endPoint = CGPoint(x: 0.0, y: 1.0)
-        //Use diffrent colors
-        view.layer.insertSublayer(gradientLayer, at: 0)
-    }
-}
-
-extension UIColor {
-    public convenience init?(hex: String) {
-        let r, g, b, a: CGFloat
-        
-        if hex.hasPrefix("#") {
-            let start = hex.index(hex.startIndex, offsetBy: 1)
-            let hexColor = String(hex[start...])
-            
-            if hexColor.count == 8 {
-                let scanner = Scanner(string: hexColor)
-                var hexNumber: UInt64 = 0
-                
-                if scanner.scanHexInt64(&hexNumber) {
-                    r = CGFloat((hexNumber & 0xff000000) >> 24) / 255
-                    g = CGFloat((hexNumber & 0x00ff0000) >> 16) / 255
-                    b = CGFloat((hexNumber & 0x0000ff00) >> 8) / 255
-                    a = CGFloat(hexNumber & 0x000000ff) / 255
-                    
-                    self.init(red: r, green: g, blue: b, alpha: a)
-                    return
-                }
-            }
-        }
-        
-        return nil
-    }
-}
 
 
 

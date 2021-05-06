@@ -64,7 +64,7 @@ class SettingsViewController : UIViewController {
         nameLabel.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         nameLabel.textColor = .white
         
-        logOutButton.setTitleColor(UIColor(hex: "#FC6565FF"), for: .normal)
+        logOutButton.setTitleColor(customRed, for: .normal)
         
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.navigationController?.navigationBar.shadowImage = UIImage()

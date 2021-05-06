@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "clockColor-1.svg",
+      "filename" : "hide_.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "clockColor.svg",
+      "filename" : "hide_-1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "clockColor-2.svg",
+      "filename" : "hide_-2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
