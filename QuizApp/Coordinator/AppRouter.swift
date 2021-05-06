@@ -35,7 +35,7 @@ class AppRouter: AppRouterProtocol {
         // REVERT TO lvc ############
         // ########################## skipping login
         // ###################### remove this
-        quizzesControllerAsRootAndShow(in: window)
+        //quizzesControllerAsRootAndShow(in: window)
     }
     
     func showQuizzes(in window: UIWindow?){
