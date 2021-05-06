@@ -2,7 +2,7 @@
 //  AppRouter.swift
 //  QuizApp
 //
-//  Created by Five on 02.05.2021..
+//  Created by Danijel Stracenski on 02.05.2021..
 //
 
 import Foundation
@@ -35,7 +35,7 @@ class AppRouter: AppRouterProtocol {
         // REVERT TO lvc ############
         // ########################## skipping login
         // ###################### remove this
-        // quizzesControllerAsRootAndShow(in: window)
+        quizzesControllerAsRootAndShow(in: window)
     }
     
     func showQuizzes(in window: UIWindow?){

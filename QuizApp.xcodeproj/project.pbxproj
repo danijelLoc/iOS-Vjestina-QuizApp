@@ -18,6 +18,7 @@
 		522A8D7F26264C68008C7970 /* QuizzesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522A8D7E26264C68008C7970 /* QuizzesViewController.swift */; };
 		5240B8E3262798C90022354A /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5240B8E2262798C90022354A /* ErrorView.swift */; };
 		526DB72B2642EF0400D0FC4E /* QuizViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 526DB72A2642EF0400D0FC4E /* QuizViewController.swift */; };
+		526EC8FD2643FE2E003C0F8B /* QuestionTrackerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 526EC8FC2643FE2D003C0F8B /* QuestionTrackerView.swift */; };
 		52B880E6261E0A770020700D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B880E5261E0A770020700D /* AppDelegate.swift */; };
 		52B880E8261E0A770020700D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B880E7261E0A770020700D /* SceneDelegate.swift */; };
 		52B880EF261E0A7B0020700D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 52B880EE261E0A7B0020700D /* Assets.xcassets */; };
@@ -47,6 +48,7 @@
 		522A8D7E26264C68008C7970 /* QuizzesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizzesViewController.swift; sourceTree = "<group>"; };
 		5240B8E2262798C90022354A /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		526DB72A2642EF0400D0FC4E /* QuizViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizViewController.swift; sourceTree = "<group>"; };
+		526EC8FC2643FE2D003C0F8B /* QuestionTrackerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionTrackerView.swift; sourceTree = "<group>"; };
 		52B880E2261E0A770020700D /* QuizApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuizApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		52B880E5261E0A770020700D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		52B880E7261E0A770020700D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 				5222FE24262775D500B8276C /* FunFactView.swift */,
 				5240B8E2262798C90022354A /* ErrorView.swift */,
 				5200CFD02640526F00D524FF /* AnswerButton.swift */,
+				526EC8FC2643FE2D003C0F8B /* QuestionTrackerView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -312,6 +315,7 @@
 				52CA46EE2621F84100C54DEE /* Question.swift in Sources */,
 				52CA46F02621F84100C54DEE /* LoginStatus.swift in Sources */,
 				5222FE222627331B00B8276C /* TableCell.swift in Sources */,
+				526EC8FD2643FE2E003C0F8B /* QuestionTrackerView.swift in Sources */,
 				522A8D7B26261F21008C7970 /* TitleLabel.swift in Sources */,
 				52CA46E62621F7CB00C54DEE /* DataService.swift in Sources */,
 				52011B7F263F0C8C00710E23 /* QuestionViewController.swift in Sources */,

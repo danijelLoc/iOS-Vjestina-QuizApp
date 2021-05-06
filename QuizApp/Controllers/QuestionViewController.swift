@@ -2,7 +2,7 @@
 //  QuizViewController.swift
 //  QuizApp
 //
-//  Created by Five on 02.05.2021..
+//  Created by Danijel Stracenski on 02.05.2021..
 //
 
 import Foundation
@@ -37,14 +37,12 @@ class QuestionViewController : UIViewController {
         super.viewDidLoad()
         buildViews()
     }
-    
 
     private func buildViews() {
         createViews()
         styleViews()
         defineLayoutForViews()
     }
-    
 
     private func createViews() {
         navigationItem.titleView = TitleLabel(title: "PopQuiz",size: 24)
@@ -52,7 +50,6 @@ class QuestionViewController : UIViewController {
         self.navigationItem.hidesBackButton = false
         backButton = UIBarButtonItem(title: "", style: UIBarButtonItem.Style.plain, target: self, action: #selector(handleReturnButton))
         backButton.tintColor = .white
-        //self.navigationItem.leftBarButtonItem = newBackButton
         self.navigationController?.navigationBar.topItem?.backBarButtonItem = backButton
         
         questionLabel = UILabel()
@@ -61,8 +58,8 @@ class QuestionViewController : UIViewController {
         questionLabel.text = question.question
         questionLabel.frame.size.width = view.frame.width - 30
         questionLabel.sizeToFit()
-
         view.addSubview(questionLabel)
+        
         createButtons()
         
         stackView = UIStackView()
@@ -109,7 +106,6 @@ class QuestionViewController : UIViewController {
         stackView.spacing = stackSpacing
         
         self.view.backgroundColor = .clear
-        
         self.navigationController?.navigationBar.isHidden = false
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
@@ -134,18 +130,15 @@ class QuestionViewController : UIViewController {
                 answerButtons[i].heightAnchor.constraint(equalToConstant: 35)
             ])
         }
-        
         NSLayoutConstraint.activate([
-            questionLabel.topAnchor.constraint(equalTo: safeArea.topAnchor,constant: 100),
+            questionLabel.topAnchor.constraint(equalTo: safeArea.topAnchor,constant: 30+30),
             questionLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 30),
             questionLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -30),
-            stackView.topAnchor.constraint(equalTo: questionLabel.bottomAnchor, constant: 30),
+            
+            stackView.topAnchor.constraint(equalTo: questionLabel.bottomAnchor, constant: 20),
             stackView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 30),
             stackView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -30),
-//            stackView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor,constant: -200)
         ])
-        
-        
     }
     
 }

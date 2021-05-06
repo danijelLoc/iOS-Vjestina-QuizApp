@@ -2,30 +2,18 @@
 //  FunFactView.swift
 //  QuizApp
 //
-//  Created by Five on 14.04.2021..
-//
-
-import Foundation
-
-//
-//  TableCell.swift
-//  QuizApp
-//
-//  Created by Five on 14.04.2021..
+//  Created by Danijel Stracenski on 14.04.2021..
 //
 
 import Foundation
 import UIKit
 
 class FunFactView : UIView{
-    
-    //private var quiz:Quiz!
-    
+
     var quizImageView:UIImageView!
     var titleLabel:UILabel!
     var detailsLabel:UILabel!
     var containerView:UIView!
-    
     
     required init ?(coder: NSCoder ) {
         fatalError ( "init(coder:) has not been implemented" )
@@ -35,8 +23,6 @@ class FunFactView : UIView{
         super.init(frame: frame)
     }
     
-    
-    
     public func setMessage(title:String, description:String){
         createViews()
         
@@ -45,6 +31,7 @@ class FunFactView : UIView{
         quizImageView.image = UIImage(systemName: "lightbulb.fill")
         quizImageView.image = quizImageView.image!.withTintColor(.yellow)
         quizImageView.tintColor = .yellow
+        
         titleLabel.numberOfLines = 0
         titleLabel.lineBreakMode = .byWordWrapping
         titleLabel.text = title
@@ -125,9 +112,5 @@ class FunFactView : UIView{
             detailsLabel.trailingAnchor.constraint(equalTo:self.containerView.trailingAnchor, constant: 10),
         ])
     }
-    
-    
-    
-    
     
 }

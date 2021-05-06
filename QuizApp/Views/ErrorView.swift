@@ -2,7 +2,7 @@
 //  ErrorLabel.swift
 //  QuizApp
 //
-//  Created by Five on 14.04.2021..
+//  Created by Danijel Stracenski on 14.04.2021..
 //
 
 import Foundation

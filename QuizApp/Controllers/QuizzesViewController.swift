@@ -2,7 +2,7 @@
 //  InitialViewController.swift
 //  QuizApp
 //
-//  Created by Five on 13.04.2021..
+//  Created by Danijel Stracenski on 13.04.2021..
 //
 
 import Foundation
@@ -86,38 +86,14 @@ class QuizzesViewController : UIViewController{
         view.addSubview(quizButton)
         quizButton.addTarget( self , action: #selector(customGetQuizzesAction), for : .touchUpInside)
         
-        // container for views if quizzes are avaible
+        // container for views if quizzes are available
         quizContainer = UIView()
-        
-        self.initQuizzesViews()
+        self.createQuizzesViews()
         quizContainer.isHidden = true
         
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        // bacause even empty navigation bar takes up space
-        self.navigationController!.navigationBar.isHidden = true
-        self.navigationController?.navigationBar.barStyle = .black
-        super.viewWillAppear(animated)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        self.navigationController!.navigationBar.isHidden = false
-        super.viewWillDisappear(animated)
-    }
-    
-    
-    private func styleViews() {
-        
-        setGradientBackground(size: view.frame.size)
-        
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.navigationBar.barStyle = .black
-        self.navigationController?.navigationBar.isHidden = true
-    }
-    
-    private func initQuizzesViews(){
+    private func createQuizzesViews(){
         view.addSubview(quizContainer)
         funFactView = FunFactView()
         funFactView.setMessage(title: "Fun fact", description: String(factNumber))
@@ -132,6 +108,28 @@ class QuizzesViewController : UIViewController{
         quizContainer.addSubview(quizzesTableView)
         
         defineQuizzesLayoutForViews()
+    }
+    
+    private func styleViews() {
+        
+        setGradientBackground(size: view.frame.size)
+        
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.barStyle = .black
+        self.navigationController?.navigationBar.isHidden = true
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        // bacause even empty navigation bar takes up space
+        self.navigationController!.navigationBar.isHidden = true
+        self.navigationController?.navigationBar.barStyle = .black
+        super.viewWillAppear(animated)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        self.navigationController!.navigationBar.isHidden = false
+        super.viewWillDisappear(animated)
     }
     
     private func defineLayoutForViews() {

@@ -2,7 +2,7 @@
 //  InitialViewController.swift
 //  QuizApp
 //
-//  Created by Five on 10.04.2021..
+//  Created by Danijel Stracenski on 10.04.2021..
 //
 
 import Foundation
@@ -78,13 +78,12 @@ class LoginViewController : UIViewController {
         
         // stack
         stackView = UIStackView()
-        
-        stackView.axis = .vertical // 1.
-        stackView.alignment = .fill // 2.
-        stackView.distribution = .fillEqually // 3.
+        stackView.axis = .vertical
+        stackView.alignment = .fill
+        stackView.distribution = .fillEqually
         stackView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(stackView)
-        stackView.addArrangedSubview(mailTextField) // 4.
+        stackView.addArrangedSubview(mailTextField)
         stackView.addArrangedSubview(passwordTextField)
         stackView.addArrangedSubview(loginButton)
         stackView.spacing = stackSpacing

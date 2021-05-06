@@ -2,7 +2,7 @@
 //  SceneDelegate.swift
 //  QuizApp
 //
-//  Created by Five on 07.04.2021..
+//  Created by Danijel Stracenski on 07.04.2021..
 //
 
 import UIKit

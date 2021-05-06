@@ -2,7 +2,7 @@
 //  Button.swift
 //  QuizApp
 //
-//  Created by Five on 13.04.2021..
+//  Created by Danijel Stracenski on 13.04.2021..
 //
 
 import Foundation

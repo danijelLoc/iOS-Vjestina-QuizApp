@@ -2,15 +2,13 @@
 //  TableCell.swift
 //  QuizApp
 //
-//  Created by Five on 14.04.2021..
+//  Created by Danijel Stracenski on 14.04.2021..
 //
 
 import Foundation
 import UIKit
 
 class TableCell : UITableViewCell{
-    
-    //private var quiz:Quiz!
     
     var quiz:Quiz!
     var quizImageView:UIImageView!
@@ -98,29 +96,28 @@ class TableCell : UITableViewCell{
     }
     
     private func setConstraints(){
-        quizImageView.centerYAnchor.constraint(equalTo:self.contentView.centerYAnchor).isActive = true
-        quizImageView.leadingAnchor.constraint(equalTo:self.contentView.leadingAnchor, constant:10).isActive = true
-        quizImageView.widthAnchor.constraint(equalToConstant:100).isActive = true
-        quizImageView.heightAnchor.constraint(equalToConstant:100).isActive = true
+        NSLayoutConstraint.activate([
+        quizImageView.centerYAnchor.constraint(equalTo:self.contentView.centerYAnchor),
+        quizImageView.leadingAnchor.constraint(equalTo:self.contentView.leadingAnchor, constant:10),
+        quizImageView.widthAnchor.constraint(equalToConstant:100),
+        quizImageView.heightAnchor.constraint(equalToConstant:100),
         
+        containerView.centerYAnchor.constraint(equalTo:self.contentView.centerYAnchor),
+        containerView.leadingAnchor.constraint(equalTo:self.quizImageView.trailingAnchor, constant:10),
+        containerView.trailingAnchor.constraint(equalTo:self.contentView.trailingAnchor, constant:-10),
+        containerView.heightAnchor.constraint(equalToConstant:143),
         
-        containerView.centerYAnchor.constraint(equalTo:self.contentView.centerYAnchor).isActive = true
-        containerView.leadingAnchor.constraint(equalTo:self.quizImageView.trailingAnchor, constant:10).isActive = true
-        containerView.trailingAnchor.constraint(equalTo:self.contentView.trailingAnchor, constant:-10).isActive = true
-        containerView.heightAnchor.constraint(equalToConstant:143).isActive = true
+        titleLabel.topAnchor.constraint(equalTo:self.containerView.topAnchor,constant: 20),
+        titleLabel.leadingAnchor.constraint(equalTo:self.containerView.leadingAnchor, constant: 10),
+        titleLabel.bottomAnchor.constraint(equalTo:self.containerView.bottomAnchor, constant: -60),
+        titleLabel.trailingAnchor.constraint(equalTo:self.containerView.trailingAnchor, constant: 10),
+        //titleLabel.trailingAnchor.constraint(equalTo:self.containerView.trailingAnchor),
         
-        
-        titleLabel.topAnchor.constraint(equalTo:self.containerView.topAnchor,constant: 20).isActive = true
-        titleLabel.leadingAnchor.constraint(equalTo:self.containerView.leadingAnchor, constant: 10).isActive = true
-        titleLabel.bottomAnchor.constraint(equalTo:self.containerView.bottomAnchor, constant: -60).isActive = true
-        titleLabel.trailingAnchor.constraint(equalTo:self.containerView.trailingAnchor, constant: 10).isActive = true
-        //titleLabel.trailingAnchor.constraint(equalTo:self.containerView.trailingAnchor).isActive = true
-        
-        
-        detailsLabel.topAnchor.constraint(equalTo:self.titleLabel.bottomAnchor, constant: 10).isActive = true
-        detailsLabel.leadingAnchor.constraint(equalTo:self.containerView.leadingAnchor, constant: 10).isActive = true
-        detailsLabel.bottomAnchor.constraint(equalTo:self.containerView.bottomAnchor, constant: -10).isActive = true
-        detailsLabel.trailingAnchor.constraint(equalTo:self.containerView.trailingAnchor, constant: 10).isActive = true
+        detailsLabel.topAnchor.constraint(equalTo:self.titleLabel.bottomAnchor, constant: 10),
+        detailsLabel.leadingAnchor.constraint(equalTo:self.containerView.leadingAnchor, constant: 10),
+        detailsLabel.bottomAnchor.constraint(equalTo:self.containerView.bottomAnchor, constant: -10),
+        detailsLabel.trailingAnchor.constraint(equalTo:self.containerView.trailingAnchor, constant: 10),
+        ])
     }
     
     

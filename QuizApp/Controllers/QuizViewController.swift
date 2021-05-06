@@ -2,18 +2,19 @@
 //  QuizzesPageViewController.swift
 //  QuizApp
 //
-//  Created by Five on 05.05.2021..
+//  Created by Danijel Stracenski on 05.05.2021..
 //
 
 import Foundation
 import UIKit
 
 class QuizViewController: UIPageViewController {
-    var controllers: [QuestionViewController] = []
+    private var controllers: [QuestionViewController] = []
     private var displayedIndex = 0
     private var router:AppRouterProtocol!
-    var quiz:Quiz!
+    private var quiz:Quiz!
     private var correctAnswers = 0
+    private var questionTrackerView:QuestionTrackerView!
     
     init(router: AppRouterProtocol, quiz: Quiz) {
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
@@ -28,19 +29,19 @@ class QuizViewController: UIPageViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //view.backgroundColor = .black
+        questionTrackerView = QuestionTrackerView()
+        questionTrackerView.setDimensions(numberOfQuestions: quiz.questions.count)
+        view.addSubview(questionTrackerView)
         
         setGradientBackground(size: view.frame.size)
         navigationItem.titleView = TitleLabel(title: "PopQuiz",size: 24)
         self.hidesBottomBarWhenPushed = true
         
         guard let firstVC = controllers.first else { return }
-        //postavljanje boje indikatora stranice
-        let pageAppearance = UIPageControl.appearance()
-        pageAppearance.currentPageIndicatorTintColor = .black
-        pageAppearance.pageIndicatorTintColor = .lightGray
         dataSource = nil
         setViewControllers([firstVC], direction: .forward, animated: true,completion: nil)
+        
+        self.setConstraints()
     }
     
     func createQuizViewControllers(){
@@ -51,6 +52,19 @@ class QuizViewController: UIPageViewController {
         }
     }
     
+    func setConstraints(){
+        let safeArea = self.view.safeAreaLayoutGuide
+        
+        questionTrackerView.translatesAutoresizingMaskIntoConstraints = false
+
+
+        NSLayoutConstraint.activate([
+            questionTrackerView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 10),
+            questionTrackerView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 30),
+            questionTrackerView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor,constant: -30)
+        ])
+    }
+    
     func nextController(result:Bool){
         if result {
             correctAnswers += 1
@@ -58,7 +72,9 @@ class QuizViewController: UIPageViewController {
         if displayedIndex < self.quiz.questions.count - 1 {
             displayedIndex += 1
             setViewControllers([controllers[displayedIndex]], direction: .forward, animated: true,completion: nil)
+            questionTrackerView.updateProgress(correctlyAnswered: result, nextIndex: displayedIndex)
         }else{
+            questionTrackerView.updateProgress(correctlyAnswered: result, nextIndex: displayedIndex+1)
             router.showResultScreen(result: QuizResult(correctAnswers: correctAnswers, numberOfQuestions: quiz.questions.count))
         }
     }
