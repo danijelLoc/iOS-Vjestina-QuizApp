@@ -63,8 +63,7 @@ class QuizzesViewController : UIViewController{
         }
         self.factNumber = num
         // show quizes if there is any
-        if allQuizzes.count != 0 { quizContainer.isHidden = false }
-        else { quizContainer.isHidden = true }
+        quizContainer.isHidden = allQuizzes.count != 0 ? false : true
         // update elements
         self.funFactView.updateDesctiption(description: String(factNumber))
         self.categorisedQuizzes = categorisedQuizzes
