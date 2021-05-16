@@ -13,7 +13,7 @@ class LoginViewController : UIViewController, LoginViewDelegate {
     
     private var loginButton: Button!
     private var titleLabel: TitleLabel!
-    private var mailTextField:InputField!
+    private var usernameTextField:InputField!
     private var passwordTextField:InputField!
     private var passwordToggleIconView:UIImageView!
     private var stackView:UIStackView!
@@ -45,21 +45,21 @@ class LoginViewController : UIViewController, LoginViewDelegate {
         titleLabel = TitleLabel(title: "PopQuiz")
         view.addSubview(titleLabel)
         
-        // mail text field
-        mailTextField = InputField(placeHolder:"Email", isProtected:false)
+        // username text field
+        usernameTextField = InputField(placeHolder:"Username or email", isProtected:false)
         
         // password text field
         passwordTextField = InputField(placeHolder: "Password", isProtected: true)
         
-        mailTextField.addSelectionListener(inputField: passwordTextField)
-        passwordTextField.addSelectionListener(inputField: mailTextField)
+        usernameTextField.addSelectionListener(inputField: passwordTextField)
+        passwordTextField.addSelectionListener(inputField: usernameTextField)
         
         // login button
         loginButton = Button(title:"Login")
         loginButton.disable()
         loginButton.addTarget( self , action: #selector(customLoginAction), for : .touchUpInside)
         passwordTextField.addEmptinessListener(button: loginButton)
-        mailTextField.addEmptinessListener(button: loginButton)
+        usernameTextField.addEmptinessListener(button: loginButton)
         
         // stack
         stackView = UIStackView()
@@ -68,7 +68,7 @@ class LoginViewController : UIViewController, LoginViewDelegate {
         stackView.distribution = .fillEqually
         stackView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(stackView)
-        stackView.addArrangedSubview(mailTextField)
+        stackView.addArrangedSubview(usernameTextField)
         stackView.addArrangedSubview(passwordTextField)
         stackView.addArrangedSubview(loginButton)
         stackView.spacing = globalStackSpacing
@@ -98,10 +98,10 @@ class LoginViewController : UIViewController, LoginViewDelegate {
     @objc
     func customLoginAction () {
         guard
-            let mail = mailTextField.text,
+            let username = usernameTextField.text,
             let password = passwordTextField.text
         else { return }
-        presenter.login(username: mail, password: password)
+        presenter.login(username: username, password: password)
     }
     
     
@@ -135,7 +135,7 @@ class LoginViewController : UIViewController, LoginViewDelegate {
     
     func showLoginClientError() {
         DispatchQueue.main.async {
-            self.mailTextField.showInvalid()
+            self.usernameTextField.showInvalid()
             self.passwordTextField.showInvalid()
         }
     }
