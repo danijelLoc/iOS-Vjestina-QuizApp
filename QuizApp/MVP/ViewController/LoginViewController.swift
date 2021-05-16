@@ -1,3 +1,4 @@
+
 //
 //  InitialViewController.swift
 //  QuizApp
@@ -6,9 +7,9 @@
 //
 
 import Foundation
-import PureLayout
 import UIKit
-class LoginViewController : UIViewController {
+class LoginViewController : UIViewController, LoginViewDelegate {
+
     
     private var loginButton: Button!
     private var titleLabel: TitleLabel!
@@ -18,8 +19,9 @@ class LoginViewController : UIViewController {
     private var stackView:UIStackView!
     private let stackSpacing:CGFloat = 18.0
     private let globalCornerRadius:CGFloat = 18
+    
     private var router: AppRouterProtocol!
-    private var dataService:DataService!
+    private var presenter: LoginPresenter!
 
     private let showPasswordImg = UIImage(named: "Show")?.withTintColor(.white, renderingMode: .alwaysOriginal)
     private let hidePasswordImg = UIImage(named: "Hide")?.withTintColor(.white, renderingMode: .alwaysOriginal)
@@ -28,7 +30,7 @@ class LoginViewController : UIViewController {
     convenience init(router: AppRouterProtocol) {
         self.init()
         self.router = router
-        self.dataService = DataService()
+        self.presenter = LoginPresenter(delegate: self)
     }
     
     override func viewDidLoad() {
@@ -43,28 +45,6 @@ class LoginViewController : UIViewController {
         defineLayoutForViews()
     }
     
-    @objc
-    func customLoginAction () {
-        guard
-            let mail = mailTextField.text,
-            let password = passwordTextField.text
-        else {
-            return
-        }
-        let status_:LoginStatus = dataService.login(email: mail, password: password)
-        switch status_{
-        case LoginStatus.success:
-            print(mail)
-            print(password)
-            self.router.quizzesControllerAsRootAndShow(in: view.window)
-        case LoginStatus.error:
-            print(status_)
-            mailTextField.showInvalid()
-            passwordTextField.showInvalid()
-        }
-        
-        
-    }
     
     private func createViews() {
         // title label
@@ -84,7 +64,6 @@ class LoginViewController : UIViewController {
         loginButton = Button(title:"Login")
         loginButton.disable()
         loginButton.addTarget( self , action: #selector(customLoginAction), for : .touchUpInside)
-        
         passwordTextField.addEmptinessListener(button: loginButton)
         mailTextField.addEmptinessListener(button: loginButton)
         
@@ -104,10 +83,8 @@ class LoginViewController : UIViewController {
         addPasswordToggle()
     }
 
-    
     private func addPasswordToggle(){
         passwordTextField.rightViewMode = .unlessEditing
-        
         passwordToggleIconView = {
             let iv = UIImageView(frame: CGRect(x: 0, y: 0, width: 15, height: 15))
             iv.contentMode = .scaleAspectFill
@@ -117,41 +94,72 @@ class LoginViewController : UIViewController {
             iv.image = showPasswordImg
             return iv
         }()
-        
         passwordTextField.addSubview(passwordToggleIconView)
         let singleTap = UITapGestureRecognizer(target: self, action: #selector(self.togglePasswordVisibility))
-        //passwordTextField.rightView = passwordToggleIconView
         passwordToggleIconView.addGestureRecognizer(singleTap)
         passwordToggleIconView.isUserInteractionEnabled = true
         passwordTextField.rightViewMode = .always
     }
     
-    // imported method :)
-    @objc func togglePasswordVisibility() {
-        passwordTextField.isSecureTextEntry = !passwordTextField.isSecureTextEntry
-        passwordToggleIconView.image = passwordTextField.isSecureTextEntry ? showPasswordImg : hidePasswordImg
-
-        if let existingText = passwordTextField.text, passwordTextField.isSecureTextEntry {
-            /* When toggling to secure text, all text will be purged if the user
-             continues typing unless we intervene. This is prevented by first
-             deleting the existing text and then recovering the original text. */
-            passwordTextField.deleteBackward()
-
-            if let textRange = passwordTextField.textRange(from: passwordTextField.beginningOfDocument, to: passwordTextField.endOfDocument) {
-                passwordTextField.replace(textRange, withText: existingText)
-            }
+    @objc
+    func customLoginAction () {
+        guard
+            let mail = mailTextField.text,
+            let password = passwordTextField.text
+        else {
+            return
         }
-
-        /* Reset the selected text range since the cursor can end up in the wrong
-         position after a toggle because the text might vary in width */
-        if let existingSelectedTextRange = passwordTextField.selectedTextRange {
-            passwordTextField.selectedTextRange = nil
-            passwordTextField.selectedTextRange = existingSelectedTextRange
+        presenter.login(username: mail, password: password)
+    }
+    
+    
+    @objc func togglePasswordVisibility() {
+        presenter.togglePassword(isSecureTextEntry: passwordTextField.isSecureTextEntry, text: passwordTextField.text)
+    }
+    
+    func presentGoodLogin() {
+        DispatchQueue.main.async {
+            self.router.quizzesControllerAsRootAndShow(in: self.view.window)
         }
     }
     
+    func presentLoginError(error:RequestError) {
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: "Error Code: \(error.rawValue)", message: "\(error)", preferredStyle:.alert)
+            alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
+            alert.overrideUserInterfaceStyle = .dark
+            self.present(alert,animated: true)
+        }
+    }
+    
+    func presentLoginClientError() {
+        DispatchQueue.main.async {
+            self.mailTextField.showInvalid()
+            self.passwordTextField.showInvalid()
+        }
+    }
+    
+    func hidePassword(existingText: String) {
+        passwordTextField.isSecureTextEntry = true
+        passwordToggleIconView.image = showPasswordImg
+        passwordTextField.deleteBackward()
+        if let textRange = passwordTextField.textRange(from: passwordTextField.beginningOfDocument, to: passwordTextField.endOfDocument) {
+            passwordTextField.replace(textRange, withText: existingText)
+        }
+        let existingSelectedTextRange = passwordTextField.selectedTextRange
+        passwordTextField.selectedTextRange = nil
+        passwordTextField.selectedTextRange = existingSelectedTextRange
+    }
+    
+    func showPassword() {
+        passwordTextField.isSecureTextEntry = false
+        passwordToggleIconView.image = hidePasswordImg
+        let existingSelectedTextRange = passwordTextField.selectedTextRange
+        passwordTextField.selectedTextRange = nil
+        passwordTextField.selectedTextRange = existingSelectedTextRange
+    }
+    
     private func styleViews() {
-        
         self.setGradientBackground(size: view.frame.size)
         self.navigationController!.navigationBar.isHidden = true
         self.navigationController?.navigationBar.barStyle = .black
@@ -166,11 +174,9 @@ class LoginViewController : UIViewController {
         NSLayoutConstraint.activate([
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             titleLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 20),
-            
             stackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 80),
             stackView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 40),
             stackView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -40),
-            
             passwordToggleIconView.heightAnchor.constraint(equalToConstant: 30),
             passwordToggleIconView.widthAnchor.constraint(equalToConstant: 30),
             passwordToggleIconView.trailingAnchor.constraint(equalTo: passwordTextField.trailingAnchor,constant: -5),
@@ -178,9 +184,3 @@ class LoginViewController : UIViewController {
         ])
     }
 }
-
-
-
-
-
-

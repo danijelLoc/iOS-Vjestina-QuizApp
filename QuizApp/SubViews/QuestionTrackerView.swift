@@ -30,7 +30,7 @@ class QuestionTrackerView : UIView{
     
     public func updateProgress(correctlyAnswered:Bool,nextIndex:Int){
         progressButtons[currentIndex].backgroundColor = (correctlyAnswered == true ? customGreen : customRed)
-        if nextIndex < numberOfQuestions{
+        if nextIndex < numberOfQuestions {
             currentIndex = nextIndex
             progressLabel.text = "\(currentIndex+1)/\(numberOfQuestions)"
             progressButtons[currentIndex].backgroundColor = .white

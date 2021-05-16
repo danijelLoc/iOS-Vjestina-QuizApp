@@ -8,19 +8,21 @@
 import Foundation
 import UIKit
 
-class QuizViewController: UIPageViewController {
+class QuizViewController: UIPageViewController,QuizViewDelegate {
     private var controllers: [QuestionViewController] = []
-    private var displayedIndex = 0
     private var router:AppRouterProtocol!
     private var quiz:Quiz!
-    private var correctAnswers = 0
+    
     private var questionTrackerView:QuestionTrackerView!
+    
+    private var quizPresenter:QuizPresenter!
     
     init(router: AppRouterProtocol, quiz: Quiz) {
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
         self.router = router
         self.quiz = quiz
         self.createQuizViewControllers()
+        self.quizPresenter = QuizPresenter(delegate: self,quiz: self.quiz)
     }
     
     required init?(coder: NSCoder) {
@@ -54,10 +56,7 @@ class QuizViewController: UIPageViewController {
     
     func setConstraints(){
         let safeArea = self.view.safeAreaLayoutGuide
-        
         questionTrackerView.translatesAutoresizingMaskIntoConstraints = false
-
-
         NSLayoutConstraint.activate([
             questionTrackerView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 10),
             questionTrackerView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 30),
@@ -66,16 +65,27 @@ class QuizViewController: UIPageViewController {
     }
     
     func nextController(result:Bool){
-        if result {
-            correctAnswers += 1
+        quizPresenter.nextQusetion(currentQuestionResult: result)
+    }
+    
+    func presentNextQuestion(displayedIndex:Int, result:Bool){
+        setViewControllers([controllers[displayedIndex]], direction: .forward, animated: true,completion: nil)
+        questionTrackerView.updateProgress(correctlyAnswered: result, nextIndex: displayedIndex)
+    }
+    
+    func presentResults(displayedIndex:Int, result:Bool, correctAnswers:Int){
+        DispatchQueue.main.async {
+            self.questionTrackerView.updateProgress(correctlyAnswered: result, nextIndex: displayedIndex+1)
+            self.router.showResultScreen(result: QuizResult(correctAnswers: correctAnswers, numberOfQuestions: self.quiz.questions.count))
         }
-        if displayedIndex < self.quiz.questions.count - 1 {
-            displayedIndex += 1
-            setViewControllers([controllers[displayedIndex]], direction: .forward, animated: true,completion: nil)
-            questionTrackerView.updateProgress(correctlyAnswered: result, nextIndex: displayedIndex)
-        }else{
-            questionTrackerView.updateProgress(correctlyAnswered: result, nextIndex: displayedIndex+1)
-            router.showResultScreen(result: QuizResult(correctAnswers: correctAnswers, numberOfQuestions: quiz.questions.count))
+    }
+    
+    func presentFailedResultSending(error:RequestError) {
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: "Error Code: \(error.rawValue)", message: "Cant send results, \(error)", preferredStyle:.alert)
+            alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
+            alert.overrideUserInterfaceStyle = .dark
+            self.present(alert,animated: true)
         }
     }
 

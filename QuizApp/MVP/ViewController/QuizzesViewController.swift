@@ -8,7 +8,7 @@
 import Foundation
 import PureLayout
 import UIKit
-class QuizzesViewController : UIViewController{
+class QuizzesViewController : UIViewController,QuizzesViewDelegate{
     
     private var quizButton: Button!
     private var titleLabel: TitleLabel!
@@ -16,8 +16,11 @@ class QuizzesViewController : UIViewController{
     private var quizzesTableView : UITableView!
     private var funFactView : FunFactView!
     private var factNumber : Int = 0
+    private var errorMessageView: ErrorView!
+    
     private var router: AppRouterProtocol!
-    let dataService : DataService = DataService()
+    private var presenter: QuizzesPresenter!
+    
     private var categorisedQuizzes:[[Quiz]] = []
     private let stackSpacing:CGFloat = 18.0
     private let globalCornerRadius:CGFloat = 18
@@ -26,6 +29,7 @@ class QuizzesViewController : UIViewController{
     convenience init(router: AppRouterProtocol) {
         self.init()
         self.router = router
+        self.presenter = QuizzesPresenter(quizzesViewDelegate: self)
     }
     
     override func viewDidLoad() {
@@ -37,38 +41,6 @@ class QuizzesViewController : UIViewController{
         createViews()
         styleViews()
         defineLayoutForViews()
-    }
-    
-    @objc
-    func customGetQuizzesAction () {
-        let allQuizzes = dataService.fetchQuizes()
-        let categories = [QuizCategory.sport,QuizCategory.science]
-        // categorise quizzes
-        let categorisedQuizzes = categories.map { (quizCategory) -> [Quiz] in
-            return allQuizzes.filter { (quiz) -> Bool in
-                switch quiz.category{
-                case quizCategory:
-                    return true
-                default:
-                    return false
-                }
-            }
-        }
-        // get fun fact number
-        var num = 0
-        for quiz in allQuizzes{
-            for question in quiz.questions{
-                if question.question.contains("NBA") { num = num + 1 }
-            }
-        }
-        self.factNumber = num
-        // show quizes if there is any
-        quizContainer.isHidden = allQuizzes.count != 0 ? false : true
-        // update elements
-        self.funFactView.updateDesctiption(description: String(factNumber))
-        self.categorisedQuizzes = categorisedQuizzes
-        self.quizzesTableView.reloadData()
-        self.quizzesTableView.reloadInputViews()
     }
     
     private func createViews() {
@@ -86,6 +58,10 @@ class QuizzesViewController : UIViewController{
         self.createQuizzesViews()
         quizContainer.isHidden = true
         
+        // error view
+        errorMessageView = ErrorView()
+        view.addSubview(errorMessageView)
+        errorMessageView.isHidden = false
     }
     
     private func createQuizzesViews(){
@@ -104,6 +80,42 @@ class QuizzesViewController : UIViewController{
         quizContainer.addSubview(quizzesTableView)
         
         defineQuizzesLayoutForViews()
+    }
+    
+    @objc
+    func customGetQuizzesAction() {
+        presenter.getQuizzes()
+    }
+    
+    func showNoQuizzes(){
+        DispatchQueue.main.async {
+            self.errorMessageView.isHidden = true
+            self.quizContainer.isHidden = true
+            // update elements anyways
+            self.funFactView.updateDesctiption(description: String(0))
+            self.categorisedQuizzes = [[]]
+            self.quizzesTableView.reloadData()
+            self.quizzesTableView.reloadInputViews()
+        }
+    }
+    
+    func showQuizzes(categorisedQuizzes: [[Quiz]], factNumber:Int) {
+        DispatchQueue.main.async {
+            self.errorMessageView.isHidden = true
+            self.quizContainer.isHidden = false
+            // update elements
+            self.factNumber = factNumber
+            self.funFactView.updateDesctiption(description: String(factNumber))
+            self.categorisedQuizzes = categorisedQuizzes
+            self.quizzesTableView.reloadData()
+            self.quizzesTableView.reloadInputViews()
+        }
+    }
+    
+    func showErrorMessage(){
+        DispatchQueue.main.async {
+            self.errorMessageView.isHidden = false
+        }
     }
     
     private func styleViews() {
@@ -130,7 +142,7 @@ class QuizzesViewController : UIViewController{
     private func defineLayoutForViews() {
         quizButton.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        
+        errorMessageView.translatesAutoresizingMaskIntoConstraints = false
         let safeArea = self.view.safeAreaLayoutGuide
         NSLayoutConstraint.activate([
             //button.centerYAnchor.constraint(equalTo: view.centerYAnchor),
@@ -140,6 +152,11 @@ class QuizzesViewController : UIViewController{
             quizButton.widthAnchor.constraint(equalToConstant: 300),
             quizButton.heightAnchor.constraint(equalTo: safeArea.heightAnchor, multiplier: 0.07),
             quizButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 30),
+            
+            errorMessageView.topAnchor.constraint(equalTo:quizButton.bottomAnchor, constant: 40),
+            errorMessageView.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor, constant: 0),
+            errorMessageView.widthAnchor.constraint(equalToConstant: 200),
+            errorMessageView.heightAnchor.constraint(equalToConstant: 300)
             
         ])
     }
@@ -204,9 +221,7 @@ extension QuizzesViewController : UITableViewDataSource ,UITableViewDelegate {
         //headerView.backgroundColor = .clear
         let categoryName = UILabel(frame:CGRect(x:20,y:30,width: headerView.frame.width,height: 30))
         categoryName.text = categorisedQuizzes[section][0].category.rawValue
-        
         categoryName.textColor = sectionColors[section % sectionColors.count]
-        
         categoryName.font = UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.bold)
         headerView.addSubview(categoryName)
         
