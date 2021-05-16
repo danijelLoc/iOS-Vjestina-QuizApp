@@ -17,15 +17,9 @@ class LoginViewController : UIViewController, LoginViewDelegate {
     private var passwordTextField:InputField!
     private var passwordToggleIconView:UIImageView!
     private var stackView:UIStackView!
-    private let stackSpacing:CGFloat = 18.0
-    private let globalCornerRadius:CGFloat = 18
     
     private var router: AppRouterProtocol!
     private var presenter: LoginPresenter!
-
-    private let showPasswordImg = UIImage(named: "Show")?.withTintColor(.white, renderingMode: .alwaysOriginal)
-    private let hidePasswordImg = UIImage(named: "Hide")?.withTintColor(.white, renderingMode: .alwaysOriginal)
-    
     
     convenience init(router: AppRouterProtocol) {
         self.init()
@@ -77,7 +71,7 @@ class LoginViewController : UIViewController, LoginViewDelegate {
         stackView.addArrangedSubview(mailTextField)
         stackView.addArrangedSubview(passwordTextField)
         stackView.addArrangedSubview(loginButton)
-        stackView.spacing = stackSpacing
+        stackView.spacing = globalStackSpacing
         
         // password visibility toggle
         addPasswordToggle()
@@ -106,9 +100,7 @@ class LoginViewController : UIViewController, LoginViewDelegate {
         guard
             let mail = mailTextField.text,
             let password = passwordTextField.text
-        else {
-            return
-        }
+        else { return }
         presenter.login(username: mail, password: password)
     }
     
@@ -117,13 +109,13 @@ class LoginViewController : UIViewController, LoginViewDelegate {
         presenter.togglePassword(isSecureTextEntry: passwordTextField.isSecureTextEntry, text: passwordTextField.text)
     }
     
-    func presentGoodLogin() {
+    func showGoodLogin() {
         DispatchQueue.main.async {
             self.router.quizzesControllerAsRootAndShow()
         }
     }
     
-    func presentLoginError(error:RequestError) {
+    func showLoginError(error:RequestError) {
         DispatchQueue.main.async {
             let alert = UIAlertController(title: "Error Code: \(error.rawValue)", message: "\(error)", preferredStyle:.alert)
             alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
@@ -132,7 +124,7 @@ class LoginViewController : UIViewController, LoginViewDelegate {
         }
     }
     
-    func presentReachabilityError(){
+    func showReachabilityError(){
         DispatchQueue.main.async {
             let alert = UIAlertController(title: "No connection", message: "The Internet connection appears to be offline.", preferredStyle:.alert)
             alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
@@ -141,7 +133,7 @@ class LoginViewController : UIViewController, LoginViewDelegate {
         }
     }
     
-    func presentLoginClientError() {
+    func showLoginClientError() {
         DispatchQueue.main.async {
             self.mailTextField.showInvalid()
             self.passwordTextField.showInvalid()

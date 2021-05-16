@@ -17,7 +17,6 @@ protocol NetworkServiceProtocol{
 class NetworkService:NetworkServiceProtocol{
 
     var reachabilty:Reachability!
-        
     init() {
         self.reachabilty = Reachability(hostName: "https://www.apple.com")
     }

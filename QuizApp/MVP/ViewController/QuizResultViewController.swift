@@ -8,27 +8,33 @@
 import Foundation
 import PureLayout
 import UIKit
-class QuizResultViewController : UIViewController {
+
+
+
+class QuizResultViewController : UIViewController,QuizResultViewDelegate {
 
 
     private var router: AppRouterProtocol!
     
-    private var quizResult: QuizResult! 
+    private var quizResult: QuizResult!
     private var resultLabel: UILabel!
     private var finishButton: Button!
+    private var presenter: QuizResultPresenter!
     
     
     convenience init(router: AppRouterProtocol, result: QuizResult) {
         self.init()
         self.router = router
         self.quizResult = result
+        self.presenter = QuizResultPresenter(delegate: self, quizResult: quizResult)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         buildViews()
+        // send result to server
+        presenter.sendResults(quizId: quizResult.quizId, correctAnswers: quizResult.correctAnswers)
     }
-    
 
     private func buildViews() {
         createViews()
@@ -36,7 +42,6 @@ class QuizResultViewController : UIViewController {
         defineLayoutForViews()
     }
     
-
     private func createViews() {
         resultLabel = quizResult.getLabel()
         view.addSubview(resultLabel)
@@ -46,8 +51,27 @@ class QuizResultViewController : UIViewController {
         view.addSubview(finishButton)
     }
     
-
+    func showFailedResultSending(error:RequestError) {
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: "Error Code: \(error.rawValue)", message: "Cant send results, \(error)", preferredStyle:.alert)
+            alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
+            alert.overrideUserInterfaceStyle = .dark
+            self.present(alert,animated: true)
+        }
+    }
     
+    func showReachabilityError(){
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: "No connection", message: "Cannot send results. The Internet connection appears to be offline.", preferredStyle:.alert)
+            alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: "Retry", style: .default, handler: { (UIAlertAction) in
+                self.presenter.sendResultsAgain()
+            }))
+            alert.overrideUserInterfaceStyle = .dark
+            self.present(alert,animated: true)
+        }
+    }
+
     @objc func handleFinishButton() {
         router.returnToQuizzes()
     }
@@ -83,20 +107,6 @@ class QuizResultViewController : UIViewController {
     
 }
 
-class QuizResult{
-    var correctAnswers: Int
-    var totalQuestions: Int
-    
-    init (correctAnswers: Int,numberOfQuestions: Int){
-        self.correctAnswers = correctAnswers
-        self.totalQuestions = numberOfQuestions
-    }
-    
-    func getLabel() -> TitleLabel{
-        return TitleLabel(title: "\(correctAnswers)/\(totalQuestions)", size: 88)
-    }
-    
-}
 
 
 

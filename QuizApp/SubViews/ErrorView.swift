@@ -10,8 +10,6 @@ import UIKit
 
 class ErrorView : UIView{
     
-    // will be implemented later with network introduction
-    
     var errorImageView:UIImageView!
     var titleLabel:UILabel!
     var detailsLabel:UILabel!

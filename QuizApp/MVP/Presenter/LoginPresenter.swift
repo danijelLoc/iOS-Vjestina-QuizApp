@@ -19,11 +19,11 @@ struct LoginResponse:Codable{
 }
 
 protocol LoginViewDelegate: AnyObject {
-    func presentGoodLogin()
-    func presentLoginError(error:RequestError)
-    func presentReachabilityError()
-    // bad input, no need for alert
-    func presentLoginClientError()
+    func showGoodLogin()
+    func showLoginError(error:RequestError)
+    func showReachabilityError()
+    // bad input, no need for alert, only mark input fileds
+    func showLoginClientError()
 
     func hidePassword(existingText:String)
     func showPassword()
@@ -42,7 +42,7 @@ class LoginPresenter{
     func login(username: String, password: String) {
         DispatchQueue.global(qos: .userInitiated).async {
             if !self.networkService.checkReachability(){
-                self.delegate.presentReachabilityError()
+                self.delegate.showReachabilityError()
                 return
             }
             
@@ -55,16 +55,16 @@ class LoginPresenter{
                     case .failure(let error):
                         switch error {
                         case .clientError:
-                            self.delegate.presentLoginClientError()
+                            self.delegate.showLoginClientError()
                         default:
-                            self.delegate.presentLoginError(error:error)
+                            self.delegate.showLoginError(error:error)
                         }
                     case .success(let value):
                         let defaults = UserDefaults.standard
                         defaults.set(value.userId, forKey: "user_id")
                         defaults.set(value.token, forKey: "user_token")
                         print("username:\(username), password:\(password),\nuserId:\(value.userId), token:\(value.token)")
-                        self.delegate.presentGoodLogin()
+                        self.delegate.showGoodLogin()
                 }
             }
         }

@@ -8,13 +8,14 @@
 import Foundation
 import UIKit
 
-class QuizViewController: UIPageViewController,QuizViewDelegate {
+class QuizViewController: UIPageViewController, QuizViewDelegate {
+
+    
     private var controllers: [QuestionViewController] = []
     private var router:AppRouterProtocol!
     private var quiz:Quiz!
     
     private var questionTrackerView:QuestionTrackerView!
-    
     private var quizPresenter:QuizPresenter!
     
     init(router: AppRouterProtocol, quiz: Quiz) {
@@ -48,7 +49,7 @@ class QuizViewController: UIPageViewController,QuizViewDelegate {
     
     func createQuizViewControllers(){
         for i in 0..<quiz.questions.count{
-            let qvc = QuestionViewController(router: router, question: quiz.questions[i],qvc: self, index: i)
+            let qvc = QuestionViewController(router: router, question: quiz.questions[i],qvc: self)
             //qvc.view.backgroundColor = .clear
             controllers.append(qvc)
         }
@@ -65,40 +66,21 @@ class QuizViewController: UIPageViewController,QuizViewDelegate {
     }
     
     func nextController(result:Bool){
-        quizPresenter.nextQusetion(currentQuestionResult: result)
+        quizPresenter.nextQuestion(currentQuestionResult: result)
     }
     
-    func presentNextQuestion(displayedIndex:Int, result:Bool){
+    func showNextQuestion(displayedIndex:Int, result:Bool){
         setViewControllers([controllers[displayedIndex]], direction: .forward, animated: true,completion: nil)
         questionTrackerView.updateProgress(correctlyAnswered: result, nextIndex: displayedIndex)
     }
     
-    func presentResults(displayedIndex:Int, result:Bool, correctAnswers:Int){
+    func showResults(displayedIndex:Int, questionResult:Bool, quizResult:QuizResult){
         DispatchQueue.main.async {
-            self.questionTrackerView.updateProgress(correctlyAnswered: result, nextIndex: displayedIndex+1)
-            self.router.showResultScreen(result: QuizResult(correctAnswers: correctAnswers, numberOfQuestions: self.quiz.questions.count))
+            self.questionTrackerView.updateProgress(correctlyAnswered: questionResult, nextIndex: displayedIndex+1)
+            self.router.showResultScreen(result: quizResult)
         }
     }
     
-    func presentFailedResultSending(error:RequestError) {
-        DispatchQueue.main.async {
-            let alert = UIAlertController(title: "Error Code: \(error.rawValue)", message: "Cant send results, \(error)", preferredStyle:.alert)
-            alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
-            alert.overrideUserInterfaceStyle = .dark
-            self.present(alert,animated: true)
-        }
-    }
-    
-    func presentReachabilityError(){
-        DispatchQueue.main.async {
-            let alert = UIAlertController(title: "No connection", message: "Cannot send results. The Internet connection appears to be offline.", preferredStyle:.alert)
-            alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
-            alert.addAction(UIAlertAction(title: "Retry", style: .default, handler: { (UIAlertAction) in
-                self.quizPresenter.sendResultsAgain()
-            }))
-            alert.overrideUserInterfaceStyle = .dark
-            self.present(alert,animated: true)
-        }
-    }
+
 
 }

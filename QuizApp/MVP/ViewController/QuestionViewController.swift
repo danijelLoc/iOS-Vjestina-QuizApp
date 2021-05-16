@@ -8,27 +8,23 @@
 import Foundation
 import PureLayout
 import UIKit
-class QuestionViewController : UIViewController {
-
+class QuestionViewController : UIViewController,QuestionViewDelegate {
 
     var backButton:UIBarButtonItem!
     private var stackView:UIStackView!
-    private let stackSpacing:CGFloat = 18.0
-    private let globalCornerRadius:CGFloat = 18
     private var router: AppRouterProtocol!
     private var question: Question!
     private var questionLabel:UILabel!
     private var answerButtons:[AnswerButton] = []
     private var qvc : QuizViewController!
+    private var presenter:QuestionPresenter!
     
-    private var index:Int!
-    
-    convenience init(router: AppRouterProtocol, question: Question, qvc: QuizViewController, index:Int) {
+    convenience init(router: AppRouterProtocol, question: Question, qvc: QuizViewController) {
         self.init()
         self.router = router
         self.question = question
         self.qvc = qvc
-        self.index = index
+        self.presenter = QuestionPresenter(delegate: self)
     }
     
     override func viewDidLoad() {
@@ -44,9 +40,8 @@ class QuestionViewController : UIViewController {
 
     private func createViews() {
         navigationItem.titleView = TitleLabel(title: "PopQuiz",size: 24)
-        
         self.navigationItem.hidesBackButton = false
-        backButton = UIBarButtonItem(title: "", style: UIBarButtonItem.Style.plain, target: self, action: #selector(handleReturnButton))
+        backButton = UIBarButtonItem(title: "", style: UIBarButtonItem.Style.plain, target: self, action: nil)
         backButton.tintColor = .white
         self.navigationController?.navigationBar.topItem?.backBarButtonItem = backButton
         
@@ -79,31 +74,35 @@ class QuestionViewController : UIViewController {
         }
     }
     
-    @objc func handleReturnButton() {
-        router.returnToQuizzes()
-    }
-    
     @objc func handleAnswerButton(_ sender: AnswerButton) {
-        stackView.isUserInteractionEnabled = false
-        let answer = sender.index!
-        let correctAnswer:Int = question.correctAnswer
-        if answer == correctAnswer {
-            answerButtons[answer].markCorrect()
-        }else{
-            answerButtons[answer].markIncorrect()
-            answerButtons[correctAnswer].markCorrect()
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.qvc.nextController(result: answer == correctAnswer)
-        }
+        self.presenter.handleAnsweredQuestion(selectedIndex: sender.index!, correctIndex: question.correctAnswer)
     }
     
+    
+    func disableInteraciton(){
+        stackView.isUserInteractionEnabled = false
+    }
+        
+    func showCorrectAnswer(selectedIndex:Int){
+        answerButtons[selectedIndex].markCorrect()
+    }
+    
+    func showWrongAnswer(correctIndex:Int, wrongIndex:Int){
+        answerButtons[wrongIndex].markIncorrect()
+        answerButtons[correctIndex].markCorrect()
+    }
+    
+    func showNextQuestion(result:Bool){
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.qvc.nextController(result: result)
+        }
+    }
     
     
     private func styleViews() {
         questionLabel.font = UIFont.systemFont(ofSize: 24, weight: UIFont.Weight.bold)
         questionLabel.textColor = .white
-        stackView.spacing = stackSpacing
+        stackView.spacing = globalStackSpacing
         
         self.view.backgroundColor = .clear
         self.navigationController?.navigationBar.isHidden = false

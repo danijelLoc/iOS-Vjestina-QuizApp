@@ -14,6 +14,12 @@ public let customRed:UIColor = UIColor(hex: "#FC6565FF")!
 public let customGreen:UIColor = UIColor(hex: "#6FCF97FF")!
 public let sectionColors:[UIColor] = [UIColor.yellow, UIColor(hex: "#56CCF2FF")!, UIColor.red, UIColor.green]
 
+public let globalStackSpacing:CGFloat = 18.0
+public let globalCornerRadius:CGFloat = 18
+
+public let showPasswordImg = UIImage(named: "Show")?.withTintColor(.white, renderingMode: .alwaysOriginal)
+public let hidePasswordImg = UIImage(named: "Hide")?.withTintColor(.white, renderingMode: .alwaysOriginal)
+
 
 extension UITextField {
     func setLeftPaddingPoints(_ amount:CGFloat){

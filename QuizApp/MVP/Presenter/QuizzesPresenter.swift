@@ -2,7 +2,7 @@
 //  QuizzesPresenter.swift
 //  QuizApp
 //
-//  Created by Five on 15.05.2021..
+//  Created by Danijel Stracenski on 15.05.2021..
 //
 
 import Foundation
@@ -66,6 +66,8 @@ class QuizzesPresenter{
                 }
             }
     }
+    
+    
     func proccesAndShowQuizzes(allQuizzes: [Quiz]){
         let categories = [QuizCategory.sport,QuizCategory.science]
         // categorise quizzes

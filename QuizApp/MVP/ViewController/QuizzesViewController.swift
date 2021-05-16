@@ -22,8 +22,6 @@ class QuizzesViewController : UIViewController,QuizzesViewDelegate{
     private var presenter: QuizzesPresenter!
     
     private var categorisedQuizzes:[[Quiz]] = []
-    private let stackSpacing:CGFloat = 18.0
-    private let globalCornerRadius:CGFloat = 18
     
 
     convenience init(router: AppRouterProtocol) {
@@ -222,8 +220,6 @@ extension QuizzesViewController : UITableViewDataSource ,UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView(frame:CGRect(x:0,y:0,width: tableView.frame.width,height: 70))
-        
-        //headerView.backgroundColor = .clear
         let categoryName = UILabel(frame:CGRect(x:20,y:30,width: headerView.frame.width,height: 30))
         categoryName.text = categorisedQuizzes[section][0].category.rawValue
         categoryName.textColor = sectionColors[section % sectionColors.count]
