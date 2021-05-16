@@ -6,14 +6,30 @@
 //
 
 import Foundation
-
+import Reachability
 
 protocol NetworkServiceProtocol{
-    
+    func checkReachability()->Bool
+    func executeUrlRequest<T: Decodable>(_ request: URLRequest, completionHandler:
+    @escaping (Result<T, RequestError>) -> Void)
 }
 
 class NetworkService:NetworkServiceProtocol{
+
+    var reachabilty:Reachability!
+        
+    init() {
+        self.reachabilty = Reachability(hostName: "https://www.apple.com")
+    }
     
+    func checkReachability() -> Bool {
+        switch self.reachabilty.currentReachabilityStatus(){
+        case .NotReachable:
+            return false
+        default:
+            return true
+        }
+    }
     
     func executeUrlRequest<T: Decodable>(_ request: URLRequest, completionHandler:
     @escaping (Result<T, RequestError>) -> Void) {
@@ -66,7 +82,7 @@ enum RequestError: Int,Error{
     case serverError = 500
     case noDataError = 404
     // good respones but decoding breaks
-    case decodingError = 200
+    case decodingError = 405
 }
 
 enum Result<Success, Failure> where Failure : Error {
@@ -78,7 +94,3 @@ enum Result<Success, Failure> where Failure : Error {
 
 
 
-
-
-struct EmptyResponse:Decodable{
-}

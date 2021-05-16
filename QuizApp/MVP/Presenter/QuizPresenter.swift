@@ -7,10 +7,13 @@
 
 import Foundation
 
-protocol QuizViewDelegate: AnyObject{
+struct EmptyResponse:Decodable{}
+
+protocol QuizViewDelegate: AnyObject {
     func presentFailedResultSending(error:RequestError)
     func presentNextQuestion(displayedIndex:Int, result:Bool)
     func presentResults(displayedIndex:Int, result:Bool, correctAnswers:Int)
+    func presentReachabilityError()
 }
 
 class QuizPresenter{
@@ -42,9 +45,19 @@ class QuizPresenter{
         }
     }
     
+    func sendResultsAgain(){
+        sendResults(quizId: quiz.id, correctAnswers: correctAnswers)
+    }
+    
     
     func sendResults(quizId:Int,correctAnswers:Int){
         DispatchQueue.global(qos: .userInitiated).async {
+            if !self.networkService.checkReachability(){
+                self.delegate.presentReachabilityError()
+                return
+            }
+            
+            
             let url = URL(string: "https://iosquiz.herokuapp.com/api/result")!
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
@@ -70,7 +83,7 @@ class QuizPresenter{
                     // show error
                     self.delegate.presentFailedResultSending(error: error)
                 case .success( _):
-                    print("sent results")
+                    print("Results have been sent successfully.")
                 }
             }
         }

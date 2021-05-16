@@ -119,13 +119,22 @@ class LoginViewController : UIViewController, LoginViewDelegate {
     
     func presentGoodLogin() {
         DispatchQueue.main.async {
-            self.router.quizzesControllerAsRootAndShow(in: self.view.window)
+            self.router.quizzesControllerAsRootAndShow()
         }
     }
     
     func presentLoginError(error:RequestError) {
         DispatchQueue.main.async {
             let alert = UIAlertController(title: "Error Code: \(error.rawValue)", message: "\(error)", preferredStyle:.alert)
+            alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
+            alert.overrideUserInterfaceStyle = .dark
+            self.present(alert,animated: true)
+        }
+    }
+    
+    func presentReachabilityError(){
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: "No connection", message: "The Internet connection appears to be offline.", preferredStyle:.alert)
             alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
             alert.overrideUserInterfaceStyle = .dark
             self.present(alert,animated: true)

@@ -10,11 +10,11 @@ import UIKit
 
 protocol AppRouterProtocol {
     func setStartScreen(in window: UIWindow?)
-    func quizzesControllerAsRootAndShow(in window: UIWindow?)
+    func quizzesControllerAsRootAndShow()
     func showQuizScreen(quiz:Quiz)
     func returnToQuizzes()
     func showResultScreen(result: QuizResult)
-    func logOut(in window: UIWindow?)
+    func logOut()
 }
 
 class AppRouter: AppRouterProtocol {
@@ -35,7 +35,7 @@ class AppRouter: AppRouterProtocol {
     }
     
     
-    func showQuizzes(in window: UIWindow?){
+    func quizzesControllerAsRootAndShow(){
         let qvc = QuizzesViewController(router: self)
         let svc = SettingsViewController(router: self)
         
@@ -47,18 +47,10 @@ class AppRouter: AppRouterProtocol {
         tabBarController.viewControllers = [qvc,svc]
         tabBarController.tabBar.tintColor = backgroundColorDarker
         tabBarController.tabBar.barTintColor = .white
-        navigationController.pushViewController(tabBarController, animated: true)
         
-        window?.rootViewController = navigationController
-        window?.makeKeyAndVisible()
+        navigationController.setViewControllers([tabBarController], animated: true)
     }
     
-    
-    func quizzesControllerAsRootAndShow(in window: UIWindow?){
-        let newNavigationController = UINavigationController()
-        let newAppRouter = AppRouter(navigationController: newNavigationController)
-        newAppRouter.showQuizzes(in: window)
-    }
     
     
     func showQuizScreen(quiz:Quiz) {
@@ -78,9 +70,8 @@ class AppRouter: AppRouterProtocol {
     }
     
     
-    func logOut(in window: UIWindow?) {
-        let navigationController = UINavigationController()
-        let appRouter = AppRouter(navigationController: navigationController)
-        appRouter.setStartScreen(in: window)
+    func logOut() {
+        let lvc = LoginViewController(router: self)
+        self.navigationController?.setViewControllers([lvc], animated: true)
     }
 }

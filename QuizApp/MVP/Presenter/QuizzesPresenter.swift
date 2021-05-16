@@ -15,7 +15,8 @@ struct QuizzesResponse:Codable{
 protocol QuizzesViewDelegate: AnyObject{
     func showQuizzes(categorisedQuizzes:[[Quiz]], factNumber:Int)
     func showNoQuizzes()
-    func showErrorMessage()
+    func showErrorMessage(error:RequestError, desc: String)
+    func showReachabilityError()
 }
 
 class QuizzesPresenter{
@@ -29,16 +30,32 @@ class QuizzesPresenter{
     
     func getQuizzes(){
         DispatchQueue.global(qos: .userInitiated).async {
+            if !self.networkService.checkReachability(){
+                self.delegate.showNoQuizzes()
+                self.delegate.showReachabilityError()
+                return
+            }
+            
             let url = URL(string: "https://iosquiz.herokuapp.com/api/quizzes")!
             var request = URLRequest(url: url)
             request.httpMethod = "GET"
             
             self.networkService.executeUrlRequest(request) { (result: Result<QuizzesResponse, RequestError>) in
                 switch result {
-                    case .failure(_):
+                    case .failure(let error):
                         // show error on delegate
                         self.delegate.showNoQuizzes()
-                        self.delegate.showErrorMessage()
+                        switch error {
+                        case .clientError:
+                            self.delegate.showErrorMessage(error: error, desc: "Bad request.")
+                        case .decodingError:
+                            self.delegate.showErrorMessage(error: error, desc: "Decoding json error.")
+                        case .noDataError:
+                            self.delegate.showErrorMessage(error: error, desc: "Data not found.")
+                        case .serverError:
+                            self.delegate.showErrorMessage(error: error, desc: "Server error.")
+                        }
+                        
                     case .success(let value):
                         if value.quizzes.count == 0 {
                             self.delegate.showNoQuizzes()

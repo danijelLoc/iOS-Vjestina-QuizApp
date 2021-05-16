@@ -61,7 +61,7 @@ class QuizzesViewController : UIViewController,QuizzesViewDelegate{
         // error view
         errorMessageView = ErrorView()
         view.addSubview(errorMessageView)
-        errorMessageView.isHidden = false
+        errorMessageView.isHidden = true
     }
     
     private func createQuizzesViews(){
@@ -91,11 +91,6 @@ class QuizzesViewController : UIViewController,QuizzesViewDelegate{
         DispatchQueue.main.async {
             self.errorMessageView.isHidden = true
             self.quizContainer.isHidden = true
-            // update elements anyways
-            self.funFactView.updateDesctiption(description: String(0))
-            self.categorisedQuizzes = [[]]
-            self.quizzesTableView.reloadData()
-            self.quizzesTableView.reloadInputViews()
         }
     }
     
@@ -112,9 +107,19 @@ class QuizzesViewController : UIViewController,QuizzesViewDelegate{
         }
     }
     
-    func showErrorMessage(){
+    func showErrorMessage(error: RequestError, desc:String){
         DispatchQueue.main.async {
             self.errorMessageView.isHidden = false
+            self.errorMessageView.titleLabel.text = "Error \(error.rawValue)"
+            self.errorMessageView.detailsLabel.text = desc
+        }
+    }
+    
+    func showReachabilityError(){
+        DispatchQueue.main.async {
+            self.errorMessageView.isHidden = false
+            self.errorMessageView.titleLabel.text = "No connection"
+            self.errorMessageView.detailsLabel.text = "Data can’t be reached. Connect to internet and try again."
         }
     }
     
@@ -155,7 +160,7 @@ class QuizzesViewController : UIViewController,QuizzesViewDelegate{
             
             errorMessageView.topAnchor.constraint(equalTo:quizButton.bottomAnchor, constant: 40),
             errorMessageView.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor, constant: 0),
-            errorMessageView.widthAnchor.constraint(equalToConstant: 200),
+            errorMessageView.widthAnchor.constraint(equalToConstant: 300),
             errorMessageView.heightAnchor.constraint(equalToConstant: 300)
             
         ])

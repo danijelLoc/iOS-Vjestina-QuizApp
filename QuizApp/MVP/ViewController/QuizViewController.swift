@@ -88,5 +88,17 @@ class QuizViewController: UIPageViewController,QuizViewDelegate {
             self.present(alert,animated: true)
         }
     }
+    
+    func presentReachabilityError(){
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: "No connection", message: "Cannot send results. The Internet connection appears to be offline.", preferredStyle:.alert)
+            alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: "Retry", style: .default, handler: { (UIAlertAction) in
+                self.quizPresenter.sendResultsAgain()
+            }))
+            alert.overrideUserInterfaceStyle = .dark
+            self.present(alert,animated: true)
+        }
+    }
 
 }
