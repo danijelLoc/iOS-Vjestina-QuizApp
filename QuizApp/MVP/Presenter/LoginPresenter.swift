@@ -40,33 +40,12 @@ class LoginPresenter{
     }
     
     func login(username: String, password: String) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            if !self.networkService.checkReachability(){
-                self.delegate.showReachabilityError()
-                return
-            }
-            
-            let url = URL(string: "https://iosquiz.herokuapp.com/api/session?username=\(username)&password=\(password)")!
-            var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            
-            self.networkService.executeUrlRequest(request) { (result: Result<LoginResponse, RequestError>) in
-                switch result {
-                    case .failure(let error):
-                        switch error {
-                        case .clientError:
-                            self.delegate.showLoginClientError()
-                        default:
-                            self.delegate.showLoginError(error:error)
-                        }
-                    case .success(let value):
-                        let defaults = UserDefaults.standard
-                        defaults.set(value.userId, forKey: "user_id")
-                        defaults.set(value.token, forKey: "user_token")
-                        print("username:\(username), password:\(password),\nuserId:\(value.userId), token:\(value.token)")
-                        self.delegate.showGoodLogin()
-                }
-            }
+        self.networkService.login(username: username, password: password, presenter: self) {loginResponse  in
+            let defaults = UserDefaults.standard
+            defaults.set(loginResponse.userId, forKey: "user_id")
+            defaults.set(loginResponse.token, forKey: "user_token")
+            print("username:\(username), password:\(password),\nuserId:\(loginResponse.userId), token:\(loginResponse.token)")
+            self.delegate.showGoodLogin()
         }
     }
     

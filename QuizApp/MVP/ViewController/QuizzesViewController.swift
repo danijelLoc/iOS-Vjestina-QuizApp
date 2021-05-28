@@ -18,6 +18,7 @@ class QuizzesViewController : UIViewController,QuizzesViewDelegate{
     private var factNumber : Int = 0
     private var errorMessageView: ErrorView!
     
+    // todo router to presenter !!!!!!!!!!!!!!!!!!!!
     private var router: AppRouterProtocol!
     private var presenter: QuizzesPresenter!
     
@@ -27,7 +28,7 @@ class QuizzesViewController : UIViewController,QuizzesViewDelegate{
     convenience init(router: AppRouterProtocol) {
         self.init()
         self.router = router
-        self.presenter = QuizzesPresenter(quizzesViewDelegate: self)
+        self.presenter = QuizzesPresenter(quizzesViewDelegate: self, quizRepository: router.getQuizRepository())
     }
     
     override func viewDidLoad() {

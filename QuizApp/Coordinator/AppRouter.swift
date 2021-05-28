@@ -7,8 +7,12 @@
 
 import Foundation
 import UIKit
+import CoreData
 
 protocol AppRouterProtocol {
+    func getCoreDataContext() -> NSManagedObjectContext
+    func getQuizRepository() -> QuizRepository
+    
     func setStartScreen(in window: UIWindow?)
     func quizzesControllerAsRootAndShow()
     func showQuizScreen(quiz:Quiz)
@@ -17,12 +21,19 @@ protocol AppRouterProtocol {
     func logOut()
 }
 
+
 class AppRouter: AppRouterProtocol {
     
     private let navigationController: UINavigationController!
+    public let coreDataContext: NSManagedObjectContext!
+    public let quizRepository: QuizRepository!
     
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
+        self.coreDataContext = CoreDataStack.shared.managedContext
+        let quizDatabaseSource = QuizDatabaseDataSource(coreDataContext: self.coreDataContext)
+        let quizNetworkSource = QuizNetworkDataSource()
+        self.quizRepository = QuizRepository(quizDatabaseSource: quizDatabaseSource, quizNetworkSource: quizNetworkSource)
     }
     
     
@@ -52,7 +63,6 @@ class AppRouter: AppRouterProtocol {
     }
     
     
-    
     func showQuizScreen(quiz:Quiz) {
         let qc = QuizViewController(router: self, quiz: quiz)
         self.navigationController?.pushViewController(qc, animated: true)
@@ -74,4 +84,15 @@ class AppRouter: AppRouterProtocol {
         let lvc = LoginViewController(router: self)
         self.navigationController?.setViewControllers([lvc], animated: true)
     }
+    
+    
+    func getCoreDataContext() -> NSManagedObjectContext {
+        return self.coreDataContext
+    }
+    
+    
+    func getQuizRepository() -> QuizRepository {
+        return self.quizRepository
+    }
+    
 }

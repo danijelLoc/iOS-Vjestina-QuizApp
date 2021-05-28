@@ -33,7 +33,7 @@ class QuizResultViewController : UIViewController,QuizResultViewDelegate {
         super.viewDidLoad()
         buildViews()
         // send result to server
-        presenter.sendResults(quizId: quizResult.quizId, correctAnswers: quizResult.correctAnswers)
+        presenter.sendResults()
     }
 
     private func buildViews() {
@@ -65,7 +65,7 @@ class QuizResultViewController : UIViewController,QuizResultViewDelegate {
             let alert = UIAlertController(title: "No connection", message: "Cannot send results. The Internet connection appears to be offline.", preferredStyle:.alert)
             alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
             alert.addAction(UIAlertAction(title: "Retry", style: .default, handler: { (UIAlertAction) in
-                self.presenter.sendResultsAgain()
+                self.presenter.sendResults()
             }))
             alert.overrideUserInterfaceStyle = .dark
             self.present(alert,animated: true)

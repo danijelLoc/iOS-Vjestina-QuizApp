@@ -22,25 +22,17 @@ protocol QuizzesViewDelegate: AnyObject{
 class QuizzesPresenter{
     weak var delegate:QuizzesViewDelegate!
     private var networkService:NetworkService!
+    private var quizRepository:QuizRepository!
     
-    init(quizzesViewDelegate:QuizzesViewDelegate) {
+    init(quizzesViewDelegate:QuizzesViewDelegate, quizRepository:QuizRepository) {
         self.delegate=quizzesViewDelegate
-        self.networkService = NetworkService()
+        self.networkService = NetworkService.shared
+        self.quizRepository = quizRepository
     }
     
     func getQuizzes(){
-        DispatchQueue.global(qos: .userInitiated).async {
-            if !self.networkService.checkReachability(){
-                self.delegate.showNoQuizzes()
-                self.delegate.showReachabilityError()
-                return
-            }
-            
-            let url = URL(string: "https://iosquiz.herokuapp.com/api/quizzes")!
-            var request = URLRequest(url: url)
-            request.httpMethod = "GET"
-            
-            self.networkService.executeUrlRequest(request) { (result: Result<QuizzesResponse, RequestError>) in
+        self.networkService.getQuizzes(presenter: self){
+            (result: Result<QuizzesResponse, RequestError>) in
                 switch result {
                     case .failure(let error):
                         // show error on delegate
@@ -55,7 +47,6 @@ class QuizzesPresenter{
                         case .serverError:
                             self.delegate.showErrorMessage(error: error, desc: "Server error.")
                         }
-                        
                     case .success(let value):
                         if value.quizzes.count == 0 {
                             self.delegate.showNoQuizzes()
@@ -63,8 +54,7 @@ class QuizzesPresenter{
                             self.proccesAndShowQuizzes(allQuizzes: value.quizzes)
                         }
                 }
-                }
-            }
+        }
     }
     
     

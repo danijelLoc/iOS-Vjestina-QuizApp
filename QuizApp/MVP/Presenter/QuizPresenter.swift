@@ -23,7 +23,7 @@ class QuizPresenter{
     
     init(delegate:QuizViewDelegate,quiz:Quiz){
         self.delegate = delegate
-        self.networkService = NetworkService()
+        self.networkService = NetworkService.shared
         self.startDate = Date()
         self.quiz = quiz
     }
