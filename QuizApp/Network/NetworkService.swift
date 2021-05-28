@@ -9,9 +9,6 @@ import Foundation
 import Reachability
 
 protocol NetworkServiceProtocol{
-    func checkReachability()->Bool
-    func executeUrlRequest<T: Decodable>(_ request: URLRequest, completionHandler:
-    @escaping (Result<T, RequestError>) -> Void)
     func login(username: String, password: String, presenter:LoginPresenter, callback: @escaping (LoginResponse) -> Void)
     func sendResults(quizResult:QuizResult, presenter:QuizResultPresenter, completionHandler: @escaping (Result<EmptyResponse, RequestError>) -> Void)
     func getQuizzes(presenter:QuizzesPresenter, completionHandler: @escaping (Result<QuizzesResponse, RequestError>) -> Void)
@@ -20,8 +17,6 @@ protocol NetworkServiceProtocol{
 class NetworkService:NetworkServiceProtocol{
     
     
-    
-
     public static let shared:NetworkService = NetworkService()
 
     var reachabilty:Reachability!
@@ -103,7 +98,7 @@ class NetworkService:NetworkServiceProtocol{
     }
     
         
-    func checkReachability() -> Bool {
+    private func checkReachability() -> Bool {
         switch self.reachabilty.currentReachabilityStatus(){
         case .NotReachable:
             return false
@@ -112,7 +107,7 @@ class NetworkService:NetworkServiceProtocol{
         }
     }
     
-    func executeUrlRequest<T: Decodable>(_ request: URLRequest, completionHandler:
+    private func executeUrlRequest<T: Decodable>(_ request: URLRequest, completionHandler:
     @escaping (Result<T, RequestError>) -> Void) {
         let dataTask = URLSession.shared.dataTask(with: request) { data, response,
             err in
