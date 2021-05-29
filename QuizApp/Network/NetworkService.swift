@@ -11,7 +11,9 @@ import Reachability
 protocol NetworkServiceProtocol{
     func login(username: String, password: String, presenter:LoginPresenter, callback: @escaping (LoginResponse) -> Void)
     func sendResults(quizResult:QuizResult, presenter:QuizResultPresenter, completionHandler: @escaping (Result<EmptyResponse, RequestError>) -> Void)
-    func getQuizzes(presenter:QuizzesPresenter, completionHandler: @escaping (Result<QuizzesResponse, RequestError>) -> Void)
+    func getQuizzesAndPresent(presenter:QuizzesPresenter, completionHandler: @escaping (Result<QuizzesResponse, RequestError>) -> Void)
+    func getQuizzes(completionHandler: @escaping (Result<QuizzesResponse, RequestError>) -> Void)
+    func checkReachability() -> Bool
 }
 
 class NetworkService:NetworkServiceProtocol{
@@ -81,7 +83,7 @@ class NetworkService:NetworkServiceProtocol{
     }
     
     
-    func getQuizzes(presenter: QuizzesPresenter, completionHandler: @escaping (Result<QuizzesResponse, RequestError>) -> Void) {
+    func getQuizzesAndPresent(presenter: QuizzesPresenter, completionHandler: @escaping (Result<QuizzesResponse, RequestError>) -> Void) {
         DispatchQueue.global(qos: .userInitiated).async {
             if !self.checkReachability(){
                 presenter.delegate.showNoQuizzes()
@@ -97,8 +99,16 @@ class NetworkService:NetworkServiceProtocol{
         }
     }
     
+    func getQuizzes(completionHandler: @escaping (Result<QuizzesResponse, RequestError>) -> Void) {
+        let url = URL(string: "https://iosquiz.herokuapp.com/api/quizzes")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
         
-    private func checkReachability() -> Bool {
+        self.executeUrlRequest(request, completionHandler: completionHandler)
+    }
+    
+        
+    func checkReachability() -> Bool {
         switch self.reachabilty.currentReachabilityStatus(){
         case .NotReachable:
             return false

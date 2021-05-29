@@ -48,14 +48,16 @@ class AppRouter: AppRouterProtocol {
     
     func quizzesControllerAsRootAndShow(){
         let qvc = QuizzesViewController(router: self)
+        let search = SearchViewController(router: self)
         let svc = SettingsViewController(router: self)
         
         // tabBar
         qvc.tabBarItem = UITabBarItem(title: "Quiz", image: UIImage(named:"Clock"), selectedImage: UIImage(named: "ClockSelected"))
+        search.tabBarItem = UITabBarItem(title: "Search", image: UIImage(named:"Search"), selectedImage: UIImage(named:"SearchSelected"))
         svc.tabBarItem = UITabBarItem(title: "Settings", image: UIImage(named:"Settings"), selectedImage: UIImage(named:"SettingsSelected"))
         
         let tabBarController = UITabBarController()
-        tabBarController.viewControllers = [qvc,svc]
+        tabBarController.viewControllers = [qvc,search,svc]
         tabBarController.tabBar.tintColor = backgroundColorDarker
         tabBarController.tabBar.barTintColor = .white
         

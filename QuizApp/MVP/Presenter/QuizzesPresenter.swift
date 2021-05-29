@@ -13,7 +13,7 @@ struct QuizzesResponse:Codable{
 }
 
 protocol QuizzesViewDelegate: AnyObject{
-    func showQuizzes(categorisedQuizzes:[[Quiz]], factNumber:Int)
+    func showQuizzes(categorisedQuizzes:[[Quiz]], factNumber:Int, imagesDictionary:[Int:Data?])
     func showNoQuizzes()
     func showErrorMessage(error:RequestError, desc: String)
     func showReachabilityError()
@@ -31,35 +31,21 @@ class QuizzesPresenter{
     }
     
     func getQuizzes(){
-        self.networkService.getQuizzes(presenter: self){
-            (result: Result<QuizzesResponse, RequestError>) in
-                switch result {
-                    case .failure(let error):
-                        // show error on delegate
-                        self.delegate.showNoQuizzes()
-                        switch error {
-                        case .clientError:
-                            self.delegate.showErrorMessage(error: error, desc: "Bad request.")
-                        case .decodingError:
-                            self.delegate.showErrorMessage(error: error, desc: "Decoding json error.")
-                        case .noDataError:
-                            self.delegate.showErrorMessage(error: error, desc: "Data not found.")
-                        case .serverError:
-                            self.delegate.showErrorMessage(error: error, desc: "Server error.")
-                        }
-                    case .success(let value):
-                        if value.quizzes.count == 0 {
-                            self.delegate.showNoQuizzes()
-                        }else{
-                            self.proccesAndShowQuizzes(allQuizzes: value.quizzes)
-                        }
-                }
-        }
+        self.quizRepository.getQuizzes(presenter:self)
     }
     
+    func getFilteredQuizzes(filterText:String?){
+        self.quizRepository.getFilteredQuizzes(presenter: self, filterText: filterText)
+    }
     
-    func proccesAndShowQuizzes(allQuizzes: [Quiz]){
-        let categories = [QuizCategory.sport,QuizCategory.science]
+    func proccesAndShowQuizzes(allQuizzes: [Quiz], imagesDictionary:[Int:Data?]){
+        var categories = Array(Set(allQuizzes.map({ (quiz) -> QuizCategory in
+            quiz.category
+        })))
+        categories.sort {
+            $0.rawValue > $1.rawValue
+        }
+        
         // categorise quizzes
         let categorisedQuizzes = categories.map { (quizCategory) -> [Quiz] in
             return allQuizzes.filter { (quiz) -> Bool in
@@ -71,6 +57,7 @@ class QuizzesPresenter{
                 }
             }
         }
+        
         // get fun fact number
         var num = 0
         for quiz in allQuizzes{
@@ -80,6 +67,6 @@ class QuizzesPresenter{
         }
         let factNumber = num
         // show quizes if there is any
-        self.delegate.showQuizzes(categorisedQuizzes: categorisedQuizzes, factNumber: factNumber)
+        self.delegate.showQuizzes(categorisedQuizzes: categorisedQuizzes, factNumber: factNumber, imagesDictionary: imagesDictionary)
     }
 }

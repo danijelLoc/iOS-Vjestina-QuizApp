@@ -19,6 +19,7 @@ class TableCell : UITableViewCell{
     var ratingStack:UIStackView!
     var section:Int!
     var ratingStars:[UIImageView] = []
+
     
     required init ?(coder: NSCoder ) {
         fatalError ( "init(coder:) has not been implemented" )
@@ -32,12 +33,14 @@ class TableCell : UITableViewCell{
         setConstraints()
     }
     
-    public func setQuiz(quiz:Quiz, section: Int){
+    public func setQuiz(quiz:Quiz, section: Int, image:UIImage?){
         self.quiz = quiz
         detailsLabel.text = " \(quiz.description) "
         titleLabel.text = quiz.title
         self.section = section
         setRating()
+        guard image != nil else { return }
+        self.quizImageView.image = image!
     }
     
     private func setRating(){

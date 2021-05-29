@@ -1,27 +1,25 @@
 //
-//  InitialViewController.swift
+//  SearchViewController.swift
 //  QuizApp
 //
-//  Created by Danijel Stracenski on 13.04.2021..
+//  Created by Five on 29.05.2021..
 //
 
 import Foundation
-import PureLayout
 import UIKit
 
-class QuizzesViewController : UIViewController,QuizzesViewDelegate{
+
+class SearchViewController : UIViewController, QuizzesViewDelegate{
     
-    private var titleLabel: TitleLabel!
     private var quizContainer:UIView!
     private var quizzesTableView : UITableView!
-    private var funFactView : FunFactView!
-    private var factNumber : Int = 0
-    private var errorMessageView: ErrorView!
     
     // todo router to presenter !!!!!!!!!!!!!!!!!!!!
     private var router: AppRouterProtocol!
     private var presenter: QuizzesPresenter!
     
+    private var searchTextField:InputField!
+    private var searchButton: Button!
     private var categorisedQuizzes: [[Quiz]] = []
     private var imagesDictionary: [Int:UIImage?] = [:]
     
@@ -39,32 +37,32 @@ class QuizzesViewController : UIViewController,QuizzesViewDelegate{
     
     private func buildViews() {
         createViews()
+        defineQuizzesLayoutForViews()
         styleViews()
-        defineLayoutForViews()
     }
     
     private func createViews() {
-        // title label
-        titleLabel = TitleLabel(title: "PopQuiz")
-        view.addSubview(titleLabel)
         
+        self.searchTextField = InputField(placeHolder:"", isProtected:false)
+        self.searchButton = Button(title: "Search")
+        self.searchButton.addTarget(self, action: #selector(customSearchAction), for: .touchUpInside)
+        view.addSubview(searchTextField)
+        view.addSubview(searchButton)
         
         // container for views if quizzes are available
         quizContainer = UIView()
         self.createQuizzesViews()
         quizContainer.isHidden = true
         
-        // error view
-        errorMessageView = ErrorView()
-        view.addSubview(errorMessageView)
-        errorMessageView.isHidden = true
+    }
+    
+    @objc
+    private func customSearchAction(){
+        self.presenter.getFilteredQuizzes(filterText: searchTextField.text)
     }
     
     private func createQuizzesViews(){
         view.addSubview(quizContainer)
-        funFactView = FunFactView()
-        funFactView.setMessage(title: "Fun fact", description: String(factNumber))
-        quizContainer.addSubview(funFactView)
         
         // table view
         quizzesTableView = UITableView(frame: .zero, style: .grouped)
@@ -80,7 +78,6 @@ class QuizzesViewController : UIViewController,QuizzesViewDelegate{
     
     func showNoQuizzes(){
         DispatchQueue.main.async {
-            self.errorMessageView.isHidden = true
             self.quizContainer.isHidden = true
         }
     }
@@ -90,36 +87,26 @@ class QuizzesViewController : UIViewController,QuizzesViewDelegate{
             self.imagesDictionary[id] = data != nil ? UIImage(data: data!) : nil
         }
         DispatchQueue.main.async {
-            self.errorMessageView.isHidden = true
             self.quizContainer.isHidden = false
             // update elements
-            self.factNumber = factNumber
-            self.funFactView.updateDesctiption(description: String(factNumber))
             self.categorisedQuizzes = categorisedQuizzes
             self.quizzesTableView.reloadData()
             self.quizzesTableView.reloadInputViews()
         }
     }
     
-    func showErrorMessage(error: RequestError, desc:String){
-        DispatchQueue.main.async {
-            self.errorMessageView.isHidden = false
-            self.errorMessageView.titleLabel.text = "Error \(error.rawValue)"
-            self.errorMessageView.detailsLabel.text = desc
-        }
+    func showErrorMessage(error: RequestError, desc: String) {
+        
     }
     
-    func showReachabilityError(){
-        DispatchQueue.main.async {
-            self.errorMessageView.isHidden = false
-            self.errorMessageView.titleLabel.text = "No connection"
-            self.errorMessageView.detailsLabel.text = "Data can’t be reached. Connect to internet and try again."
-        }
+    func showReachabilityError() {
+        
     }
     
     private func styleViews() {
-        
         setGradientBackground(size: view.frame.size)
+        self.searchButton.backgroundColor = .clear
+        self.searchButton.setTitleColor(.white, for: .normal)
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.barStyle = .black
@@ -128,7 +115,6 @@ class QuizzesViewController : UIViewController,QuizzesViewDelegate{
     
     override func viewWillAppear(_ animated: Bool) {
         // bacause even empty navigation bar takes up space
-        self.presenter.getQuizzes()
         self.navigationController?.navigationBar.isHidden = true
         self.navigationController?.navigationBar.barStyle = .black
         super.viewWillAppear(animated)
@@ -139,41 +125,31 @@ class QuizzesViewController : UIViewController,QuizzesViewDelegate{
         super.viewWillDisappear(animated)
     }
     
-    private func defineLayoutForViews() {
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        errorMessageView.translatesAutoresizingMaskIntoConstraints = false
-        let safeArea = self.view.safeAreaLayoutGuide
-        NSLayoutConstraint.activate([
-            //button.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            titleLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 10),
-
-            errorMessageView.topAnchor.constraint(equalTo:titleLabel.bottomAnchor, constant: 40),
-            errorMessageView.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor, constant: 0),
-            errorMessageView.widthAnchor.constraint(equalToConstant: 300),
-            errorMessageView.heightAnchor.constraint(equalToConstant: 300)
-            
-        ])
-    }
     
     private func defineQuizzesLayoutForViews() {
-        funFactView.translatesAutoresizingMaskIntoConstraints = false
+        searchTextField.translatesAutoresizingMaskIntoConstraints = false
+        searchButton.translatesAutoresizingMaskIntoConstraints = false
         quizzesTableView.translatesAutoresizingMaskIntoConstraints = false
         quizContainer.translatesAutoresizingMaskIntoConstraints = false
         let safeArea = self.view.safeAreaLayoutGuide
         NSLayoutConstraint.activate([
-            quizContainer.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
+            searchTextField.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 70),
+            searchTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor,constant: 20),
+            searchTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor,constant: -100),
+            searchTextField.heightAnchor.constraint(equalToConstant: 40),
+            
+            searchButton.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 70),
+            searchButton.leadingAnchor.constraint(equalTo: searchTextField.trailingAnchor,constant: 5),
+            searchButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor,constant: 0),
+            searchButton.heightAnchor.constraint(equalToConstant: 40),
+            
+            quizContainer.topAnchor.constraint(equalTo: searchTextField.bottomAnchor, constant: 10),
             quizContainer.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor,constant: 0),
             quizContainer.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor,constant: 0),
             quizContainer.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor,constant: 0),
             
-            funFactView.centerXAnchor.constraint(equalTo: quizContainer.centerXAnchor),
-            funFactView.leadingAnchor.constraint(equalTo: quizContainer.leadingAnchor,constant: 20),
-            funFactView.trailingAnchor.constraint(equalTo: quizContainer.trailingAnchor,constant: -20),
-            funFactView.heightAnchor.constraint(equalToConstant: 100),
-            funFactView.topAnchor.constraint(equalTo: quizContainer.topAnchor, constant: 0),
             
-            quizzesTableView.topAnchor.constraint(equalTo: funFactView.bottomAnchor, constant: 0),
+            quizzesTableView.topAnchor.constraint(equalTo: quizContainer.topAnchor, constant: 10),
             quizzesTableView.trailingAnchor.constraint(equalTo: quizContainer.trailingAnchor,constant: -10),
             quizzesTableView.leadingAnchor.constraint(equalTo: quizContainer.leadingAnchor,constant: 10),
             quizzesTableView.bottomAnchor.constraint(equalTo: quizContainer.bottomAnchor,constant: -20)
@@ -183,7 +159,7 @@ class QuizzesViewController : UIViewController,QuizzesViewDelegate{
 
 
 
-extension QuizzesViewController : UITableViewDataSource ,UITableViewDelegate {
+extension SearchViewController : UITableViewDataSource ,UITableViewDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return self.categorisedQuizzes.count
@@ -235,5 +211,3 @@ extension QuizzesViewController : UITableViewDataSource ,UITableViewDelegate {
     }
     
 }
-
-

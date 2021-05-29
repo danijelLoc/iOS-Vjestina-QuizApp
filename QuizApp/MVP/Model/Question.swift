@@ -5,6 +5,13 @@ struct Question : Codable{
     let answers: [String]
     let correctAnswer: Int
     
+    init(with entity:CDQuestion){
+        id = Int(entity.id)
+        question = entity.question
+        answers = entity.answers
+        correctAnswer = Int(entity.correctAnswer)
+    }
+    
     
     enum CodingKeys: String, CodingKey {
         case id

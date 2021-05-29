@@ -16,13 +16,13 @@ extension CDQuiz {
         return NSFetchRequest<CDQuiz>(entityName: "CDQuiz")
     }
 
-    @NSManaged public var category: String?
-    @NSManaged public var description_: String?
-    @NSManaged public var id: Int64
-    @NSManaged public var imageUrl: String?
-    @NSManaged public var level: Int64
-    @NSManaged public var title: String?
-    @NSManaged public var questions: NSSet?
+    @NSManaged public var category: String
+    @NSManaged public var description_: String
+    @NSManaged public var id: Int32
+    @NSManaged public var imageUrl: String
+    @NSManaged public var level: Int32
+    @NSManaged public var title: String
+    @NSManaged public var questions: NSSet
 
 }
 

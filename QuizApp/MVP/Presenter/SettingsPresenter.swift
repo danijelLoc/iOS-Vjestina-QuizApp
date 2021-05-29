@@ -20,6 +20,9 @@ class SettingsPresenter{
     }
     
     func logOut(){
+        let defaults = UserDefaults.standard
+        defaults.removeObject(forKey: "user_id")
+        defaults.removeObject(forKey: "user_token")
         self.delegate.showLogOut()
     }
     

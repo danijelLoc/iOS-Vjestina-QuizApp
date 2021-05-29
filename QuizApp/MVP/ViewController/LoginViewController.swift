@@ -29,7 +29,16 @@ class LoginViewController : UIViewController, LoginViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        buildViews()
+        // remember login
+        let defaults = UserDefaults.standard
+        guard let _ = defaults.object(forKey: "user_id"),
+              let _ = defaults.object(forKey: "user_token")
+        else{
+            buildViews()
+            return
+        }
+        self.styleViews()
+        self.showGoodLogin()
     }
     
 
