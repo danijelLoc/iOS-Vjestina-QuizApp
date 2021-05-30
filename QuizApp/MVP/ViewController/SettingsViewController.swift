@@ -10,8 +10,6 @@ import PureLayout
 import UIKit
 class SettingsViewController : UIViewController,SettingsViewDelegate {
 
-
-    private var router: AppRouterProtocol!
     private var usernameLabel: UILabel!
     private var nameLabel:UILabel!
     private var logOutButton: Button!
@@ -20,8 +18,7 @@ class SettingsViewController : UIViewController,SettingsViewDelegate {
     
     convenience init(router: AppRouterProtocol) {
         self.init()
-        self.router = router
-        self.presenter = SettingsPresenter(delegate: self)
+        self.presenter = SettingsPresenter(router: router, delegate: self)
     }
     
     override func viewDidLoad() {
@@ -53,10 +50,6 @@ class SettingsViewController : UIViewController,SettingsViewDelegate {
     
     @objc func handleLogOut() {
         self.presenter.logOut()
-    }
-    
-    func showLogOut() {
-        router.logOut()
     }
     
     private func styleViews() {

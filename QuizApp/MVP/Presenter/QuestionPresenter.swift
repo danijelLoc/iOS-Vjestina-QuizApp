@@ -17,11 +17,12 @@ protocol QuestionViewDelegate: AnyObject {
 
 class QuestionPresenter{
     
-weak var delegate:QuestionViewDelegate!
+    weak var delegate: QuestionViewDelegate!
     private var router: AppRouterProtocol!
     
-    init(delegate:QuestionViewDelegate){
+    init(delegate: QuestionViewDelegate, router: AppRouterProtocol){
         self.delegate = delegate
+        self.router = router
     }
     
     func handleAnsweredQuestion(selectedIndex: Int, correctIndex:Int){

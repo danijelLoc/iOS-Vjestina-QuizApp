@@ -33,14 +33,14 @@ class TableCell : UITableViewCell{
         setConstraints()
     }
     
-    public func setQuiz(quiz:Quiz, section: Int, image:UIImage?){
+    public func setQuiz(quiz:Quiz, section: Int){
         self.quiz = quiz
         detailsLabel.text = " \(quiz.description) "
         titleLabel.text = quiz.title
         self.section = section
         setRating()
-        guard image != nil else { return }
-        self.quizImageView.image = image!
+        guard quiz.image != nil else { return }
+        self.quizImageView.image = quiz.image!
     }
     
     private func setRating(){

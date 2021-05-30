@@ -2,7 +2,7 @@
 //  SearchViewController.swift
 //  QuizApp
 //
-//  Created by Five on 29.05.2021..
+//  Created by Danijel Stracenski on 29.05.2021..
 //
 
 import Foundation
@@ -13,21 +13,14 @@ class SearchViewController : UIViewController, QuizzesViewDelegate{
     
     private var quizContainer:UIView!
     private var quizzesTableView : UITableView!
-    
-    // todo router to presenter !!!!!!!!!!!!!!!!!!!!
-    private var router: AppRouterProtocol!
     private var presenter: QuizzesPresenter!
-    
     private var searchTextField:InputField!
     private var searchButton: Button!
     private var categorisedQuizzes: [[Quiz]] = []
-    private var imagesDictionary: [Int:UIImage?] = [:]
-    
 
     convenience init(router: AppRouterProtocol) {
         self.init()
-        self.router = router
-        self.presenter = QuizzesPresenter(quizzesViewDelegate: self, quizRepository: router.getQuizRepository())
+        self.presenter = QuizzesPresenter(quizzesViewDelegate: self, router: router)
     }
     
     override func viewDidLoad() {
@@ -82,10 +75,7 @@ class SearchViewController : UIViewController, QuizzesViewDelegate{
         }
     }
     
-    func showQuizzes(categorisedQuizzes: [[Quiz]], factNumber:Int, imagesDictionary: [Int:Data?]) {
-        for (id,data) in imagesDictionary{
-            self.imagesDictionary[id] = data != nil ? UIImage(data: data!) : nil
-        }
+    func showQuizzes(categorisedQuizzes: [[Quiz]], factNumber:Int) {
         DispatchQueue.main.async {
             self.quizContainer.isHidden = false
             // update elements
@@ -133,12 +123,12 @@ class SearchViewController : UIViewController, QuizzesViewDelegate{
         quizContainer.translatesAutoresizingMaskIntoConstraints = false
         let safeArea = self.view.safeAreaLayoutGuide
         NSLayoutConstraint.activate([
-            searchTextField.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 70),
+            searchTextField.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 40),
             searchTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor,constant: 20),
             searchTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor,constant: -100),
             searchTextField.heightAnchor.constraint(equalToConstant: 40),
             
-            searchButton.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 70),
+            searchButton.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 40),
             searchButton.leadingAnchor.constraint(equalTo: searchTextField.trailingAnchor,constant: 5),
             searchButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor,constant: 0),
             searchButton.heightAnchor.constraint(equalToConstant: 40),
@@ -176,8 +166,7 @@ extension SearchViewController : UITableViewDataSource ,UITableViewDelegate {
         let section = indexPath.section
         if(indexPath.row < self.categorisedQuizzes[section].count){
             let quiz = self.categorisedQuizzes[section][indexPath.row]
-            let image: UIImage? = imagesDictionary.keys.contains(quiz.id) ? imagesDictionary[quiz.id]! : nil
-            cell.setQuiz(quiz: quiz, section: section, image: image)
+            cell.setQuiz(quiz: quiz, section: section)
         }
         return cell
     }
@@ -207,7 +196,7 @@ extension SearchViewController : UITableViewDataSource ,UITableViewDelegate {
     
     func tableView ( _ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
         let selected_quiz = categorisedQuizzes[indexPath.section][indexPath.row]
-        router.showQuizScreen(quiz: selected_quiz)
+        presenter.presentQuizScreen(selected_quiz: selected_quiz)
     }
     
 }

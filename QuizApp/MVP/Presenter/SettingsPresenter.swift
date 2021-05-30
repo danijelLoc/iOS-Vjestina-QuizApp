@@ -8,22 +8,23 @@
 import Foundation
 
 protocol SettingsViewDelegate: AnyObject {
-    func showLogOut()
 }
 
 class SettingsPresenter{
     
-    weak var delegate:SettingsViewDelegate!
+    weak var delegate: SettingsViewDelegate!
+    private var router: AppRouterProtocol!
     
-    init(delegate:SettingsViewDelegate){
+    init(router: AppRouterProtocol, delegate:SettingsViewDelegate){
         self.delegate = delegate
+        self.router = router
     }
     
     func logOut(){
         let defaults = UserDefaults.standard
         defaults.removeObject(forKey: "user_id")
         defaults.removeObject(forKey: "user_token")
-        self.delegate.showLogOut()
+        router.logOut()
     }
     
 }

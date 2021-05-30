@@ -10,6 +10,7 @@
         <attribute name="category" attributeType="String" customClassName="QuizCategory"/>
         <attribute name="description_" attributeType="String"/>
         <attribute name="id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="imageData" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
         <attribute name="imageUrl" attributeType="String"/>
         <attribute name="level" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="title" attributeType="String"/>
@@ -17,6 +18,6 @@
     </entity>
     <elements>
         <element name="CDQuestion" positionX="-54" positionY="-9" width="128" height="103"/>
-        <element name="CDQuiz" positionX="-274.1849975585938" positionY="-278.3066101074219" width="128" height="148"/>
+        <element name="CDQuiz" positionX="-274.1849975585938" positionY="-278.3066101074219" width="128" height="149"/>
     </elements>
 </model>

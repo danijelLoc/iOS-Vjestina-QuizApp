@@ -13,7 +13,7 @@ struct QuizzesResponse:Codable{
 }
 
 protocol QuizzesViewDelegate: AnyObject{
-    func showQuizzes(categorisedQuizzes:[[Quiz]], factNumber:Int, imagesDictionary:[Int:Data?])
+    func showQuizzes(categorisedQuizzes:[[Quiz]], factNumber:Int)
     func showNoQuizzes()
     func showErrorMessage(error:RequestError, desc: String)
     func showReachabilityError()
@@ -23,11 +23,13 @@ class QuizzesPresenter{
     weak var delegate:QuizzesViewDelegate!
     private var networkService:NetworkService!
     private var quizRepository:QuizRepository!
+    private var router:AppRouterProtocol!
     
-    init(quizzesViewDelegate:QuizzesViewDelegate, quizRepository:QuizRepository) {
+    init(quizzesViewDelegate:QuizzesViewDelegate, router: AppRouterProtocol) {
         self.delegate=quizzesViewDelegate
         self.networkService = NetworkService.shared
-        self.quizRepository = quizRepository
+        self.quizRepository = router.getQuizRepository()
+        self.router = router
     }
     
     func getQuizzes(){
@@ -38,7 +40,7 @@ class QuizzesPresenter{
         self.quizRepository.getFilteredQuizzes(presenter: self, filterText: filterText)
     }
     
-    func proccesAndShowQuizzes(allQuizzes: [Quiz], imagesDictionary:[Int:Data?]){
+    func proccesAndShowQuizzes(allQuizzes: [Quiz]){
         var categories = Array(Set(allQuizzes.map({ (quiz) -> QuizCategory in
             quiz.category
         })))
@@ -67,6 +69,13 @@ class QuizzesPresenter{
         }
         let factNumber = num
         // show quizes if there is any
-        self.delegate.showQuizzes(categorisedQuizzes: categorisedQuizzes, factNumber: factNumber, imagesDictionary: imagesDictionary)
+        self.delegate.showQuizzes(categorisedQuizzes: categorisedQuizzes, factNumber: factNumber)
     }
+    
+    
+    func presentQuizScreen(selected_quiz: Quiz){
+        router.showQuizScreen(quiz: selected_quiz)
+    }
+    
+    
 }

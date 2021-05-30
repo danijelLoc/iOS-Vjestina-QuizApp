@@ -20,12 +20,14 @@ class QuizPresenter{
     private var quiz:Quiz!
     private var correctAnswers = 0
     private var displayedIndex = 0
+    private var router:AppRouterProtocol!
     
-    init(delegate:QuizViewDelegate,quiz:Quiz){
+    init(router: AppRouterProtocol, delegate:QuizViewDelegate,quiz:Quiz){
         self.delegate = delegate
         self.networkService = NetworkService.shared
         self.startDate = Date()
         self.quiz = quiz
+        self.router = router
     }
     
     func nextQuestion(currentQuestionResult:Bool){
@@ -39,6 +41,7 @@ class QuizPresenter{
             let time:Double = Date().timeIntervalSince(self.startDate)
             let quizResult = QuizResult(quizId: quiz.id, correctAnswers: correctAnswers, numberOfQuestions: quiz.questions.count, time: time)
             self.delegate.showResults(displayedIndex: displayedIndex, questionResult: currentQuestionResult, quizResult: quizResult)
+            self.router.showResultScreen(result: quizResult)
         }
     }
     

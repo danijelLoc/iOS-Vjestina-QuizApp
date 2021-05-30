@@ -12,7 +12,6 @@ class QuizViewController: UIPageViewController, QuizViewDelegate {
 
     
     private var controllers: [QuestionViewController] = []
-    private var router:AppRouterProtocol!
     private var quiz:Quiz!
     
     private var questionTrackerView:QuestionTrackerView!
@@ -20,10 +19,9 @@ class QuizViewController: UIPageViewController, QuizViewDelegate {
     
     init(router: AppRouterProtocol, quiz: Quiz) {
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
-        self.router = router
         self.quiz = quiz
-        self.createQuizViewControllers()
-        self.quizPresenter = QuizPresenter(delegate: self,quiz: self.quiz)
+        self.createQuizViewControllers(router: router)
+        self.quizPresenter = QuizPresenter(router: router, delegate: self,quiz: self.quiz)
     }
     
     required init?(coder: NSCoder) {
@@ -47,7 +45,7 @@ class QuizViewController: UIPageViewController, QuizViewDelegate {
         self.setConstraints()
     }
     
-    func createQuizViewControllers(){
+    func createQuizViewControllers(router: AppRouterProtocol){
         for i in 0..<quiz.questions.count{
             let qvc = QuestionViewController(router: router, question: quiz.questions[i],qvc: self)
             //qvc.view.backgroundColor = .clear
@@ -77,7 +75,6 @@ class QuizViewController: UIPageViewController, QuizViewDelegate {
     func showResults(displayedIndex:Int, questionResult:Bool, quizResult:QuizResult){
         DispatchQueue.main.async {
             self.questionTrackerView.updateProgress(correctlyAnswered: questionResult, nextIndex: displayedIndex+1)
-            self.router.showResultScreen(result: quizResult)
         }
     }
     

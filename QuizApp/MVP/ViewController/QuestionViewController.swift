@@ -12,7 +12,6 @@ class QuestionViewController : UIViewController,QuestionViewDelegate {
 
     var backButton:UIBarButtonItem!
     private var stackView:UIStackView!
-    private var router: AppRouterProtocol!
     private var question: Question!
     private var questionLabel:UILabel!
     private var answerButtons:[AnswerButton] = []
@@ -21,10 +20,9 @@ class QuestionViewController : UIViewController,QuestionViewDelegate {
     
     convenience init(router: AppRouterProtocol, question: Question, qvc: QuizViewController) {
         self.init()
-        self.router = router
         self.question = question
         self.qvc = qvc
-        self.presenter = QuestionPresenter(delegate: self)
+        self.presenter = QuestionPresenter(delegate: self, router: router)
     }
     
     override func viewDidLoad() {

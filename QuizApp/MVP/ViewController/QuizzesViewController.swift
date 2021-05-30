@@ -17,19 +17,12 @@ class QuizzesViewController : UIViewController,QuizzesViewDelegate{
     private var funFactView : FunFactView!
     private var factNumber : Int = 0
     private var errorMessageView: ErrorView!
-    
-    // todo router to presenter !!!!!!!!!!!!!!!!!!!!
-    private var router: AppRouterProtocol!
     private var presenter: QuizzesPresenter!
-    
     private var categorisedQuizzes: [[Quiz]] = []
-    private var imagesDictionary: [Int:UIImage?] = [:]
-    
 
     convenience init(router: AppRouterProtocol) {
         self.init()
-        self.router = router
-        self.presenter = QuizzesPresenter(quizzesViewDelegate: self, quizRepository: router.getQuizRepository())
+        self.presenter = QuizzesPresenter(quizzesViewDelegate: self, router: router)
     }
     
     override func viewDidLoad() {
@@ -85,10 +78,7 @@ class QuizzesViewController : UIViewController,QuizzesViewDelegate{
         }
     }
     
-    func showQuizzes(categorisedQuizzes: [[Quiz]], factNumber:Int, imagesDictionary: [Int:Data?]) {
-        for (id,data) in imagesDictionary{
-            self.imagesDictionary[id] = data != nil ? UIImage(data: data!) : nil
-        }
+    func showQuizzes(categorisedQuizzes: [[Quiz]], factNumber:Int) {
         DispatchQueue.main.async {
             self.errorMessageView.isHidden = true
             self.quizContainer.isHidden = false
@@ -200,8 +190,7 @@ extension QuizzesViewController : UITableViewDataSource ,UITableViewDelegate {
         let section = indexPath.section
         if(indexPath.row < self.categorisedQuizzes[section].count){
             let quiz = self.categorisedQuizzes[section][indexPath.row]
-            let image: UIImage? = imagesDictionary.keys.contains(quiz.id) ? imagesDictionary[quiz.id]! : nil
-            cell.setQuiz(quiz: quiz, section: section, image: image)
+            cell.setQuiz(quiz: quiz, section: section)
         }
         return cell
     }
@@ -231,7 +220,7 @@ extension QuizzesViewController : UITableViewDataSource ,UITableViewDelegate {
     
     func tableView ( _ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
         let selected_quiz = categorisedQuizzes[indexPath.section][indexPath.row]
-        router.showQuizScreen(quiz: selected_quiz)
+        presenter.presentQuizScreen(selected_quiz: selected_quiz)
     }
     
 }

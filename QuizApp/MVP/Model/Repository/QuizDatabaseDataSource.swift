@@ -34,7 +34,7 @@ class QuizDatabaseDataSource{
         }
     }
     
-    func saveNewQuizzes(_ quizzes: [Quiz]) {
+    func saveNewQuizzes(_ quizzes: [Quiz], imagesDictionary:[Int:Data?]) {
         do {
             let newIds = quizzes.map { $0.id }
             try deleteAllQuizzesExcept(withId: newIds)
@@ -46,7 +46,8 @@ class QuizDatabaseDataSource{
         quizzes.forEach { quiz in
             do {
                 let cdQuiz = try fetcQuiz(withId: quiz.id) ?? CDQuiz(context: coreDataContext)
-                quiz.populate(cdQuiz, in: coreDataContext)
+                let imageData = imagesDictionary.keys.contains(quiz.id) ? imagesDictionary[quiz.id]! : nil
+                quiz.populate(cdQuiz, in: coreDataContext, imageData: imageData)
             } catch {
                 print("### Error when fetching/creating a quiz: \(error)")
             }

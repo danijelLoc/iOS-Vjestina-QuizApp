@@ -19,13 +19,18 @@ class QuizResultPresenter{
     weak var delegate:QuizResultViewDelegate!
     var networkService:NetworkService!
     private var quizResult:QuizResult!
+    private var router:AppRouterProtocol!
 
-    init(delegate:QuizResultViewDelegate,quizResult:QuizResult){
+    init(router: AppRouterProtocol, delegate:QuizResultViewDelegate, quizResult:QuizResult){
         self.delegate = delegate
         self.networkService = NetworkService.shared
         self.quizResult = quizResult
+        self.router = router
     }
     
+    func presentReturnToQuizzes(){
+        router.returnToQuizzes()
+    }
     
     func sendResults(){
         self.networkService.sendResults(quizResult: self.quizResult, presenter: self) {  (result: Result<EmptyResponse, RequestError>) in

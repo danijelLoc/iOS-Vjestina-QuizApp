@@ -17,14 +17,11 @@ class LoginViewController : UIViewController, LoginViewDelegate {
     private var passwordTextField:InputField!
     private var passwordToggleIconView:UIImageView!
     private var stackView:UIStackView!
-    
-    private var router: AppRouterProtocol!
     private var presenter: LoginPresenter!
     
     convenience init(router: AppRouterProtocol) {
         self.init()
-        self.router = router
-        self.presenter = LoginPresenter(delegate: self)
+        self.presenter = LoginPresenter(delegate: self, router: router)
     }
     
     override func viewDidLoad() {
@@ -38,7 +35,7 @@ class LoginViewController : UIViewController, LoginViewDelegate {
             return
         }
         self.styleViews()
-        self.showGoodLogin()
+        self.presenter.presentGoodLogin()
     }
     
 
@@ -118,12 +115,7 @@ class LoginViewController : UIViewController, LoginViewDelegate {
         presenter.togglePassword(isSecureTextEntry: passwordTextField.isSecureTextEntry, text: passwordTextField.text)
     }
     
-    func showGoodLogin() {
-        DispatchQueue.main.async {
-            self.router.quizzesControllerAsRootAndShow()
-        }
-    }
-    
+
     func showLoginError(error:RequestError) {
         DispatchQueue.main.async {
             let alert = UIAlertController(title: "Error Code: \(error.rawValue)", message: "\(error)", preferredStyle:.alert)

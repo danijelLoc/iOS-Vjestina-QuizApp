@@ -10,6 +10,7 @@ import Foundation
 class QuizRepository{
     public let quizDatabaseSourece:QuizDatabaseDataSource!
     public let quizNetworkSource:QuizNetworkDataSource!
+    private var imagesDictionary: [Int:Data?] = [:]
     
     init(quizDatabaseSource:QuizDatabaseDataSource, quizNetworkSource:QuizNetworkDataSource) {
         self.quizDatabaseSourece = quizDatabaseSource
@@ -25,8 +26,7 @@ class QuizRepository{
                     if quizzes.isEmpty{
                         presenter.delegate.showNoQuizzes()
                     }else{
-                        let imagesDictionary = self.getQuizzesImages(quizzes: quizzes, connection: false)
-                        presenter.proccesAndShowQuizzes(allQuizzes: quizzes, imagesDictionary: imagesDictionary)
+                        presenter.proccesAndShowQuizzes(allQuizzes: quizzes)
                     }
                 }else {
                 // network
@@ -41,12 +41,17 @@ class QuizRepository{
                                 if value.quizzes.count == 0 {
                                     presenter.delegate.showNoQuizzes()
                                 }else{
-                                    self.quizDatabaseSourece.saveNewQuizzes(value.quizzes)
+                                    // download images first time and on new quizzes on server
+                                    if self.imagesDictionary.isEmpty || self.imagesDictionary.keys.count != value.quizzes.count {
+                                        self.imagesDictionary = self.getQuizzesImages(quizzes: value.quizzes, connection: true)
+                                    }
+                                    self.quizDatabaseSourece.saveNewQuizzes(value.quizzes, imagesDictionary: self.imagesDictionary)
                                     if value.quizzes.isEmpty{
                                         presenter.delegate.showNoQuizzes()
                                     }else{
-                                        let imagesDictionary = self.getQuizzesImages(quizzes: value.quizzes, connection: true)
-                                        presenter.proccesAndShowQuizzes(allQuizzes: value.quizzes, imagesDictionary: imagesDictionary)
+                                        // getting quizzes from database to get downloaded images
+                                        let quizzesWithImages = self.quizDatabaseSourece.fetchQuizzesFromCoreData(filter: FilterSettings(searchText: nil))
+                                        presenter.proccesAndShowQuizzes(allQuizzes: quizzesWithImages)
                                     }
                                 }
                         }
@@ -64,8 +69,7 @@ class QuizRepository{
                 if quizzes.isEmpty{
                     presenter.delegate.showNoQuizzes()
                 }else{
-                    let imagesDictionary = self.getQuizzesImages(quizzes: quizzes, connection: self.quizNetworkSource.checkReachability())
-                    presenter.proccesAndShowQuizzes(allQuizzes: quizzes, imagesDictionary: imagesDictionary)
+                    presenter.proccesAndShowQuizzes(allQuizzes: quizzes)
                 }
             }
         }

@@ -13,9 +13,6 @@ import UIKit
 
 class QuizResultViewController : UIViewController,QuizResultViewDelegate {
 
-
-    private var router: AppRouterProtocol!
-    
     private var quizResult: QuizResult!
     private var resultLabel: UILabel!
     private var finishButton: Button!
@@ -24,9 +21,8 @@ class QuizResultViewController : UIViewController,QuizResultViewDelegate {
     
     convenience init(router: AppRouterProtocol, result: QuizResult) {
         self.init()
-        self.router = router
         self.quizResult = result
-        self.presenter = QuizResultPresenter(delegate: self, quizResult: quizResult)
+        self.presenter = QuizResultPresenter(router: router, delegate: self, quizResult: quizResult)
     }
     
     override func viewDidLoad() {
@@ -73,7 +69,7 @@ class QuizResultViewController : UIViewController,QuizResultViewDelegate {
     }
 
     @objc func handleFinishButton() {
-        router.returnToQuizzes()
+        presenter.presentReturnToQuizzes()
     }
     
     private func styleViews() {

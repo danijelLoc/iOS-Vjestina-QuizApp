@@ -19,7 +19,6 @@ struct LoginResponse:Codable{
 }
 
 protocol LoginViewDelegate: AnyObject {
-    func showGoodLogin()
     func showLoginError(error:RequestError)
     func showReachabilityError()
     // bad input, no need for alert, only mark input fileds
@@ -32,11 +31,12 @@ protocol LoginViewDelegate: AnyObject {
 class LoginPresenter{
     weak var delegate:LoginViewDelegate!
     var networkService:NetworkServiceProtocol!
+    private var router: AppRouterProtocol!
     
-    
-    init(delegate:LoginViewDelegate){
+    init(delegate:LoginViewDelegate, router: AppRouterProtocol){
         self.delegate = delegate
         self.networkService = NetworkService()
+        self.router = router
     }
     
     func login(username: String, password: String) {
@@ -45,7 +45,13 @@ class LoginPresenter{
             defaults.set(loginResponse.userId, forKey: "user_id")
             defaults.set(loginResponse.token, forKey: "user_token")
             print("username:\(username), password:\(password),\nuserId:\(loginResponse.userId), token:\(loginResponse.token)")
-            self.delegate.showGoodLogin()
+            self.presentGoodLogin()
+        }
+    }
+    
+    func presentGoodLogin(){
+        DispatchQueue.main.async {
+            self.router.quizzesControllerAsRootAndShow()
         }
     }
     
