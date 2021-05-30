@@ -41,7 +41,9 @@ class QuizPresenter{
             let time:Double = Date().timeIntervalSince(self.startDate)
             let quizResult = QuizResult(quizId: quiz.id, correctAnswers: correctAnswers, numberOfQuestions: quiz.questions.count, time: time)
             self.delegate.showResults(displayedIndex: displayedIndex, questionResult: currentQuestionResult, quizResult: quizResult)
-            self.router.showResultScreen(result: quizResult)
+            DispatchQueue.main.async {
+                self.router.showResultScreen(result: quizResult)
+            }
         }
     }
     

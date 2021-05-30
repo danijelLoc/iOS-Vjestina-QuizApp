@@ -24,8 +24,8 @@ class QuizDatabaseDataSource{
             namePredicate = NSPredicate(format: "%K CONTAINS[cd] %@", #keyPath(CDQuiz.title), text)
         }
 
-        let andPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [namePredicate])
-        request.predicate = andPredicate
+        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [namePredicate])
+        request.predicate = predicate
         do {
             return try coreDataContext.fetch(request).map { Quiz(with: $0) }
         } catch {

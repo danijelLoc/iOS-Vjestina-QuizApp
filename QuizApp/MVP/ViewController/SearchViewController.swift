@@ -35,10 +35,10 @@ class SearchViewController : UIViewController, QuizzesViewDelegate{
     }
     
     private func createViews() {
-        
         self.searchTextField = InputField(placeHolder:"", isProtected:false)
         self.searchButton = Button(title: "Search")
-        self.searchButton.addTarget(self, action: #selector(customSearchAction), for: .touchUpInside)
+        self.searchButton.addTarget(self, action: #selector(customSearchAction), for: .touchDown)
+        self.searchTextField.isEnabled = true
         view.addSubview(searchTextField)
         view.addSubview(searchButton)
         
@@ -56,7 +56,6 @@ class SearchViewController : UIViewController, QuizzesViewDelegate{
     
     private func createQuizzesViews(){
         view.addSubview(quizContainer)
-        
         // table view
         quizzesTableView = UITableView(frame: .zero, style: .grouped)
         quizzesTableView.dataSource = self
@@ -123,17 +122,17 @@ class SearchViewController : UIViewController, QuizzesViewDelegate{
         quizContainer.translatesAutoresizingMaskIntoConstraints = false
         let safeArea = self.view.safeAreaLayoutGuide
         NSLayoutConstraint.activate([
-            searchTextField.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 40),
+            searchTextField.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 30),
             searchTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor,constant: 20),
-            searchTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor,constant: -100),
+            searchTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor,constant: -120),
             searchTextField.heightAnchor.constraint(equalToConstant: 40),
             
-            searchButton.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 40),
-            searchButton.leadingAnchor.constraint(equalTo: searchTextField.trailingAnchor,constant: 5),
-            searchButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor,constant: 0),
+            searchButton.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 30),
+            searchButton.leadingAnchor.constraint(equalTo: searchTextField.trailingAnchor,constant: 10),
+            searchButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor,constant: -20),
             searchButton.heightAnchor.constraint(equalToConstant: 40),
             
-            quizContainer.topAnchor.constraint(equalTo: searchTextField.bottomAnchor, constant: 10),
+            quizContainer.topAnchor.constraint(equalTo: searchTextField.bottomAnchor, constant: 20),
             quizContainer.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor,constant: 0),
             quizContainer.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor,constant: 0),
             quizContainer.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor,constant: 0),

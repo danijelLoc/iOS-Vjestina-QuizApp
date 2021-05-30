@@ -74,7 +74,9 @@ class QuizzesPresenter{
     
     
     func presentQuizScreen(selected_quiz: Quiz){
-        router.showQuizScreen(quiz: selected_quiz)
+        DispatchQueue.main.async {
+            self.router.showQuizScreen(quiz: selected_quiz)
+        }
     }
     
     

@@ -24,7 +24,9 @@ class SettingsPresenter{
         let defaults = UserDefaults.standard
         defaults.removeObject(forKey: "user_id")
         defaults.removeObject(forKey: "user_token")
-        router.logOut()
+        DispatchQueue.main.async {
+            self.router.logOut()
+        }
     }
     
 }

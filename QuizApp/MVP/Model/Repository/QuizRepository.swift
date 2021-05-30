@@ -39,6 +39,7 @@ class QuizRepository{
                                 print(error)
                             case .success(let value):
                                 if value.quizzes.count == 0 {
+                                    self.quizDatabaseSourece.saveNewQuizzes(value.quizzes, imagesDictionary: self.imagesDictionary)
                                     presenter.delegate.showNoQuizzes()
                                 }else{
                                     // download images first time and on new quizzes on server
@@ -46,13 +47,9 @@ class QuizRepository{
                                         self.imagesDictionary = self.getQuizzesImages(quizzes: value.quizzes, connection: true)
                                     }
                                     self.quizDatabaseSourece.saveNewQuizzes(value.quizzes, imagesDictionary: self.imagesDictionary)
-                                    if value.quizzes.isEmpty{
-                                        presenter.delegate.showNoQuizzes()
-                                    }else{
-                                        // getting quizzes from database to get downloaded images
-                                        let quizzesWithImages = self.quizDatabaseSourece.fetchQuizzesFromCoreData(filter: FilterSettings(searchText: nil))
-                                        presenter.proccesAndShowQuizzes(allQuizzes: quizzesWithImages)
-                                    }
+                                    // getting quizzes from database to get downloaded images
+                                    let quizzesWithImages = self.quizDatabaseSourece.fetchQuizzesFromCoreData(filter: FilterSettings(searchText: nil))
+                                    presenter.proccesAndShowQuizzes(allQuizzes: quizzesWithImages)
                                 }
                         }
                     }

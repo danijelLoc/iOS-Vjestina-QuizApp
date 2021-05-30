@@ -29,7 +29,9 @@ class QuizResultPresenter{
     }
     
     func presentReturnToQuizzes(){
-        router.returnToQuizzes()
+        DispatchQueue.main.async {
+            self.router.returnToQuizzes()
+        }
     }
     
     func sendResults(){
