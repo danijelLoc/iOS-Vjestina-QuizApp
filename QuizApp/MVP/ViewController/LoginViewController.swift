@@ -206,11 +206,14 @@ extension LoginViewController{
             return
         }
         
-        self.usernameTextField.transform = self.usernameTextField.transform.translatedBy(x: -view.frame.width, y: 0)
-        self.passwordTextField.transform = self.passwordTextField.transform.translatedBy(x: -view.frame.width, y: 0)
-        self.loginButton.transform = self.loginButton.transform.translatedBy(x: -view.frame.width, y: 0)
-        
         self.titleLabel.transform = self.titleLabel.transform.scaledBy(x: 0, y: 0)
+        self.titleLabel.alpha = 0
+        self.usernameTextField.transform = self.usernameTextField.transform.translatedBy(x: -view.frame.width, y: 0)
+        self.usernameTextField.alpha = 0
+        self.passwordTextField.transform = self.passwordTextField.transform.translatedBy(x: -view.frame.width, y: 0)
+        self.passwordTextField.alpha = 0
+        self.loginButton.transform = self.loginButton.transform.translatedBy(x: -view.frame.width, y: 0)
+        self.loginButton.alpha = 0
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -220,6 +223,14 @@ extension LoginViewController{
         else{
             return
         }
+        UIView.animate(
+            withDuration: 1.5,
+            delay: 0,
+            options: .curveEaseInOut,
+            animations: {
+                self.titleLabel.transform = .identity
+                self.titleLabel.alpha = 1
+            })
         
         UIView.animate(
             withDuration: 1.5,
@@ -227,6 +238,7 @@ extension LoginViewController{
             options: .curveEaseInOut,
             animations: {
                 self.usernameTextField.transform = .identity
+                self.usernameTextField.alpha = 1
             })
             
         UIView.animate(
@@ -235,6 +247,7 @@ extension LoginViewController{
             options: .curveEaseInOut,
             animations: {
                 self.passwordTextField.transform = .identity
+                self.passwordTextField.alpha = 1
             })
         
         UIView.animate(
@@ -243,14 +256,8 @@ extension LoginViewController{
             options: .curveEaseInOut,
             animations: {
                 self.loginButton.transform = .identity
-            })
-        
-        UIView.animate(
-            withDuration: 1.5,
-            delay: 0,
-            options: .curveEaseInOut,
-            animations: {
-                self.titleLabel.transform = .identity
+                // disabled at start
+                self.loginButton.alpha = 0.5
             })
     }
     

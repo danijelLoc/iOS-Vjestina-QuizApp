@@ -30,7 +30,7 @@ class Button: UIButton{
     }
     
     func disable(){
-        self.alpha = 0.6
+        self.alpha = 0.5
         self.isUserInteractionEnabled = false
     }
     
