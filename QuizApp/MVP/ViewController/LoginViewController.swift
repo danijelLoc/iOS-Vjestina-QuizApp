@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 class LoginViewController : UIViewController, LoginViewDelegate {
-
+    
     
     private var loginButton: Button!
     private var titleLabel: TitleLabel!
@@ -67,17 +67,10 @@ class LoginViewController : UIViewController, LoginViewDelegate {
         passwordTextField.addEmptinessListener(button: loginButton)
         usernameTextField.addEmptinessListener(button: loginButton)
         
-        // stack
-        stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.alignment = .fill
-        stackView.distribution = .fillEqually
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(stackView)
-        stackView.addArrangedSubview(usernameTextField)
-        stackView.addArrangedSubview(passwordTextField)
-        stackView.addArrangedSubview(loginButton)
-        stackView.spacing = globalStackSpacing
+        // input fields
+        view.addSubview(usernameTextField)
+        view.addSubview(passwordTextField)
+        view.addSubview(loginButton)
         
         // password visibility toggle
         addPasswordToggle()
@@ -99,6 +92,26 @@ class LoginViewController : UIViewController, LoginViewDelegate {
         passwordToggleIconView.addGestureRecognizer(singleTap)
         passwordToggleIconView.isUserInteractionEnabled = true
         passwordTextField.rightViewMode = .always
+    }
+    
+    func hidePassword(existingText: String) {
+        passwordTextField.isSecureTextEntry = true
+        passwordToggleIconView.image = showPasswordImg
+        passwordTextField.deleteBackward()
+        if let textRange = passwordTextField.textRange(from: passwordTextField.beginningOfDocument, to: passwordTextField.endOfDocument) {
+            passwordTextField.replace(textRange, withText: existingText)
+        }
+        let existingSelectedTextRange = passwordTextField.selectedTextRange
+        passwordTextField.selectedTextRange = nil
+        passwordTextField.selectedTextRange = existingSelectedTextRange
+    }
+    
+    func showPassword() {
+        passwordTextField.isSecureTextEntry = false
+        passwordToggleIconView.image = hidePasswordImg
+        let existingSelectedTextRange = passwordTextField.selectedTextRange
+        passwordTextField.selectedTextRange = nil
+        passwordTextField.selectedTextRange = existingSelectedTextRange
     }
     
     @objc
@@ -141,26 +154,6 @@ class LoginViewController : UIViewController, LoginViewDelegate {
         }
     }
     
-    func hidePassword(existingText: String) {
-        passwordTextField.isSecureTextEntry = true
-        passwordToggleIconView.image = showPasswordImg
-        passwordTextField.deleteBackward()
-        if let textRange = passwordTextField.textRange(from: passwordTextField.beginningOfDocument, to: passwordTextField.endOfDocument) {
-            passwordTextField.replace(textRange, withText: existingText)
-        }
-        let existingSelectedTextRange = passwordTextField.selectedTextRange
-        passwordTextField.selectedTextRange = nil
-        passwordTextField.selectedTextRange = existingSelectedTextRange
-    }
-    
-    func showPassword() {
-        passwordTextField.isSecureTextEntry = false
-        passwordToggleIconView.image = hidePasswordImg
-        let existingSelectedTextRange = passwordTextField.selectedTextRange
-        passwordTextField.selectedTextRange = nil
-        passwordTextField.selectedTextRange = existingSelectedTextRange
-    }
-    
     private func styleViews() {
         self.setGradientBackground(size: view.frame.size)
         self.navigationController!.navigationBar.isHidden = true
@@ -169,20 +162,132 @@ class LoginViewController : UIViewController, LoginViewDelegate {
     
     private func defineLayoutForViews() {
         let safeArea = self.view.safeAreaLayoutGuide
-        
+        usernameTextField.translatesAutoresizingMaskIntoConstraints = false
+        passwordTextField.translatesAutoresizingMaskIntoConstraints = false
         loginButton.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             titleLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 20),
-            stackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 80),
-            stackView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 40),
-            stackView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -40),
-            passwordToggleIconView.heightAnchor.constraint(equalToConstant: 30),
-            passwordToggleIconView.widthAnchor.constraint(equalToConstant: 30),
+            
+            usernameTextField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 80),
+            usernameTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 40),
+            usernameTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -40),
+            usernameTextField.heightAnchor.constraint(equalToConstant: 37),
+            passwordTextField.topAnchor.constraint(equalTo: usernameTextField.bottomAnchor, constant: 18),
+            passwordTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 40),
+            passwordTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -40),
+            passwordTextField.heightAnchor.constraint(equalToConstant: 35),
+            loginButton.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 18),
+            loginButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 40),
+            loginButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -40),
+            loginButton.heightAnchor.constraint(equalToConstant: 37),
+            
+            passwordToggleIconView.heightAnchor.constraint(equalToConstant: 25),
+            passwordToggleIconView.widthAnchor.constraint(equalToConstant: 25),
             passwordToggleIconView.trailingAnchor.constraint(equalTo: passwordTextField.trailingAnchor,constant: -5),
             passwordToggleIconView.centerYAnchor.constraint(equalTo: passwordTextField.centerYAnchor,constant: 0)
         ])
+    }
+}
+
+
+extension LoginViewController{
+    // animations
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        guard UserDefaults.standard.object(forKey: "user_id") == nil
+        else{
+            // if user is logged in, dont show login screen
+            // and its animations
+            return
+        }
+        
+        self.usernameTextField.transform = self.usernameTextField.transform.translatedBy(x: -view.frame.width, y: 0)
+        self.passwordTextField.transform = self.passwordTextField.transform.translatedBy(x: -view.frame.width, y: 0)
+        self.loginButton.transform = self.loginButton.transform.translatedBy(x: -view.frame.width, y: 0)
+        
+        self.titleLabel.transform = self.titleLabel.transform.scaledBy(x: 0, y: 0)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        guard UserDefaults.standard.object(forKey: "user_id") == nil
+        else{
+            return
+        }
+        
+        UIView.animate(
+            withDuration: 1.5,
+            delay: 0,
+            options: .curveEaseInOut,
+            animations: {
+                self.usernameTextField.transform = .identity
+            })
+            
+        UIView.animate(
+            withDuration: 1.5,
+            delay: 0.25,
+            options: .curveEaseInOut,
+            animations: {
+                self.passwordTextField.transform = .identity
+            })
+        
+        UIView.animate(
+            withDuration: 1.5,
+            delay: 0.5,
+            options: .curveEaseInOut,
+            animations: {
+                self.loginButton.transform = .identity
+            })
+        
+        UIView.animate(
+            withDuration: 1.5,
+            delay: 0,
+            options: .curveEaseInOut,
+            animations: {
+                self.titleLabel.transform = .identity
+            })
+    }
+    
+    func animateOut(onComplete: @escaping (Bool) -> Void ){
+        guard self.usernameTextField != nil else {return}
+        UIView.animate(
+            withDuration: 0.5,
+            delay: 0,
+            options: .curveEaseInOut,
+            animations: {
+                self.titleLabel.transform = self.titleLabel.transform.translatedBy(x: 0, y: -self.view.frame.height)
+            }
+        )
+        
+        UIView.animate(
+            withDuration: 0.5,
+            delay: 0.25,
+            options: .curveEaseInOut,
+            animations: {
+                self.usernameTextField.transform = self.usernameTextField.transform.translatedBy(x: 0, y: -self.view.frame.height)
+            })
+            
+        UIView.animate(
+            withDuration: 0.5,
+            delay: 0.5,
+            options: .curveEaseInOut,
+            animations: {
+                self.passwordTextField.transform = self.passwordTextField.transform.translatedBy(x: 0, y: -self.view.frame.height)
+            })
+        
+        UIView.animate(
+            withDuration: 0.5,
+            delay: 0.75,
+            options: .curveEaseInOut,
+            animations: {
+                self.loginButton.transform = self.loginButton.transform.translatedBy(x: 0, y: -self.view.frame.height)
+            },
+            completion: onComplete)
     }
 }
