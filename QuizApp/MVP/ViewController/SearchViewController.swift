@@ -20,12 +20,15 @@ class SearchViewController : UIViewController, QuizzesViewDelegate{
 
     convenience init(router: AppRouterProtocol) {
         self.init()
-        self.presenter = QuizzesPresenter(quizzesViewDelegate: self, router: router)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         buildViews()
+    }
+    
+    func setPresenter(presenter: QuizzesPresenter){
+        self.presenter = presenter
     }
     
     private func buildViews() {

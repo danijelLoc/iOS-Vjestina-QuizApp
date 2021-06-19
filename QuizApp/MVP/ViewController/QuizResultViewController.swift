@@ -22,7 +22,10 @@ class QuizResultViewController : UIViewController,QuizResultViewDelegate {
     convenience init(router: AppRouterProtocol, result: QuizResult) {
         self.init()
         self.quizResult = result
-        self.presenter = QuizResultPresenter(router: router, delegate: self, quizResult: quizResult)
+    }
+    
+    func setPresenter(presenter: QuizResultPresenter){
+        self.presenter = presenter
     }
     
     override func viewDidLoad() {

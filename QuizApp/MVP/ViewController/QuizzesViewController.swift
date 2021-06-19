@@ -22,7 +22,10 @@ class QuizzesViewController : UIViewController,QuizzesViewDelegate{
 
     convenience init(router: AppRouterProtocol) {
         self.init()
-        self.presenter = QuizzesPresenter(quizzesViewDelegate: self, router: router)
+    }
+    
+    func setPresenter(presenter: QuizzesPresenter){
+        self.presenter = presenter
     }
     
     override func viewDidLoad() {

@@ -15,17 +15,24 @@ class QuizViewController: UIPageViewController, QuizViewDelegate {
     private var quiz:Quiz!
     
     private var questionTrackerView:QuestionTrackerView!
-    private var quizPresenter:QuizPresenter!
+    private var presenter:QuizPresenter!
     
     init(router: AppRouterProtocol, quiz: Quiz) {
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
         self.quiz = quiz
         self.createQuizViewControllers(router: router)
-        self.quizPresenter = QuizPresenter(router: router, delegate: self,quiz: self.quiz)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setPresenter(presenter: QuizPresenter){
+        self.presenter = presenter
+    }
+    
+    func getPresenter()-> QuizPresenter{
+        return self.presenter
     }
     
     override func viewDidLoad() {
@@ -48,6 +55,8 @@ class QuizViewController: UIPageViewController, QuizViewDelegate {
     func createQuizViewControllers(router: AppRouterProtocol){
         for i in 0..<quiz.questions.count{
             let qvc = QuestionViewController(router: router, question: quiz.questions[i],qvc: self)
+            let qp = QuestionPresenter(delegate: qvc, router: router)
+            qvc.setPresenter(presenter: qp)
             //qvc.view.backgroundColor = .clear
             controllers.append(qvc)
         }
@@ -64,7 +73,7 @@ class QuizViewController: UIPageViewController, QuizViewDelegate {
     }
     
     func nextController(result:Bool){
-        quizPresenter.nextQuestion(currentQuestionResult: result)
+        presenter.nextQuestion(currentQuestionResult: result)
     }
     
     func showNextQuestion(displayedIndex:Int, result:Bool){

@@ -45,7 +45,7 @@ class QuizDatabaseDataSource{
 
         quizzes.forEach { quiz in
             do {
-                let cdQuiz = try fetcQuiz(withId: quiz.id) ?? CDQuiz(context: coreDataContext)
+                let cdQuiz = try fetchQuiz(withId: quiz.id) ?? CDQuiz(context: coreDataContext)
                 let imageData = imagesDictionary.keys.contains(quiz.id) ? imagesDictionary[quiz.id]! : nil
                 quiz.populate(cdQuiz, in: coreDataContext, imageData: imageData)
             } catch {
@@ -60,7 +60,7 @@ class QuizDatabaseDataSource{
         }
     }
     
-    private func fetcQuiz(withId id: Int) throws -> CDQuiz? {
+    private func fetchQuiz(withId id: Int) throws -> CDQuiz? {
         let request: NSFetchRequest<CDQuiz> = CDQuiz.fetchRequest()
         request.predicate = NSPredicate(format: "%K == %u", #keyPath(CDQuiz.id), id)
 
@@ -69,7 +69,7 @@ class QuizDatabaseDataSource{
     }
     
     func deleteQuiz(withId id: Int) {
-        guard let quiz = try? fetcQuiz(withId: id) else { return }
+        guard let quiz = try? fetchQuiz(withId: id) else { return }
 
         coreDataContext.delete(quiz)
 

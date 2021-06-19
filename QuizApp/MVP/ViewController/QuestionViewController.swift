@@ -22,7 +22,11 @@ class QuestionViewController : UIViewController,QuestionViewDelegate {
         self.init()
         self.question = question
         self.qvc = qvc
-        self.presenter = QuestionPresenter(delegate: self, router: router)
+    }
+    
+    
+    func setPresenter(presenter: QuestionPresenter){
+        self.presenter = presenter
     }
     
     override func viewDidLoad() {

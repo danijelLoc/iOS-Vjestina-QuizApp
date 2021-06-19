@@ -18,7 +18,6 @@ class QuizRepository{
     }
     
     public func getQuizzes(presenter:QuizzesPresenter){
-        // print("Get quizzes")
         DispatchQueue.global(qos: .default).async {
                 // no internet
                 if !self.quizNetworkSource.checkReachability(){
@@ -69,20 +68,6 @@ class QuizRepository{
                     presenter.proccesAndShowQuizzes(allQuizzes: quizzes)
                 }
             }
-        }
-    }
-    
-    
-    func showError(error:RequestError,presenter:QuizzesPresenter){
-        switch error {
-        case .clientError:
-            presenter.delegate.showErrorMessage(error: error, desc: "Bad request.")
-        case .decodingError:
-            presenter.delegate.showErrorMessage(error: error, desc: "Decoding json error.")
-        case .noDataError:
-            presenter.delegate.showErrorMessage(error: error, desc: "Data not found.")
-        case .serverError:
-            presenter.delegate.showErrorMessage(error: error, desc: "Server error.")
         }
     }
     

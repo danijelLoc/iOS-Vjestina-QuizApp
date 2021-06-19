@@ -38,18 +38,38 @@ class AppRouter: AppRouterProtocol {
     
     
     func setStartScreen(in window: UIWindow?) {
-        let lvc = LoginViewController(router: self)
-        navigationController.pushViewController(lvc, animated: true)
-        
+        let defaults = UserDefaults.standard
+        guard let _ = defaults.object(forKey: "user_id"),
+              let _ = defaults.object(forKey: "user_token")
+        else {
+            // if user is not logged in
+            let lvc = LoginViewController(router: self)
+            let lp = LoginPresenter(delegate: lvc, router: self)
+            lvc.setPresenter(presenter: lp)
+            navigationController.pushViewController(lvc, animated: true)
+            
+            window?.rootViewController = navigationController
+            window?.makeKeyAndVisible()
+            return
+        }
+        // else skip login
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
+        quizzesControllerAsRootAndShow()
+        return
     }
     
     
     func quizzesControllerAsRootAndShow(){
         let qvc = QuizzesViewController(router: self)
+        let qp = QuizzesPresenter(quizzesViewDelegate: qvc, router: self)
+        qvc.setPresenter(presenter: qp)
         let search = SearchViewController(router: self)
+        let sqp = QuizzesPresenter(quizzesViewDelegate: search, router: self)
+        search.setPresenter(presenter: sqp)
         let svc = SettingsViewController(router: self)
+        let sp = SettingsPresenter(router: self, delegate: svc)
+        svc.setPresenter(presenter: sp)
         
         // tabBar
         qvc.tabBarItem = UITabBarItem(title: "Quiz", image: UIImage(named:"Clock"), selectedImage: UIImage(named: "ClockSelected"))
@@ -67,6 +87,8 @@ class AppRouter: AppRouterProtocol {
     
     func showQuizScreen(quiz:Quiz) {
         let qc = QuizViewController(router: self, quiz: quiz)
+        let qp = QuizPresenter(router: self, delegate: qc, quiz: quiz)
+        qc.setPresenter(presenter: qp)
         self.navigationController?.pushViewController(qc, animated: true)
     }
     
@@ -78,12 +100,16 @@ class AppRouter: AppRouterProtocol {
     
     func showResultScreen(result:QuizResult){
         let rvc = QuizResultViewController(router: self, result: result)
+        let rp = QuizResultPresenter(router: self, delegate: rvc, quizResult: result)
+        rvc.setPresenter(presenter: rp)
         self.navigationController?.pushViewController(rvc, animated: true)
     }
     
     
     func logOut() {
         let lvc = LoginViewController(router: self)
+        let lp = LoginPresenter(delegate: lvc, router: self)
+        lvc.setPresenter(presenter: lp)
         self.navigationController?.setViewControllers([lvc], animated: true)
     }
     

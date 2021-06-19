@@ -18,12 +18,15 @@ class SettingsViewController : UIViewController,SettingsViewDelegate {
     
     convenience init(router: AppRouterProtocol) {
         self.init()
-        self.presenter = SettingsPresenter(router: router, delegate: self)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         buildViews()
+    }
+    
+    func setPresenter(presenter: SettingsPresenter){
+        self.presenter = presenter
     }
     
 

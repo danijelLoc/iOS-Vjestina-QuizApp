@@ -45,11 +45,11 @@ class LoginPresenter{
             defaults.set(loginResponse.userId, forKey: "user_id")
             defaults.set(loginResponse.token, forKey: "user_token")
             print("username:\(username), password:\(password),\nuserId:\(loginResponse.userId), token:\(loginResponse.token)")
-            self.presentGoodLogin()
+            self.presentSuccessfulLogin()
         }
     }
     
-    func presentGoodLogin(){
+    func presentSuccessfulLogin(){
         DispatchQueue.main.async {
             self.router.quizzesControllerAsRootAndShow()
         }

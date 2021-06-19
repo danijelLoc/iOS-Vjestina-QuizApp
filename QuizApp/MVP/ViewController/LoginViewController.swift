@@ -21,21 +21,16 @@ class LoginViewController : UIViewController, LoginViewDelegate {
     
     convenience init(router: AppRouterProtocol) {
         self.init()
-        self.presenter = LoginPresenter(delegate: self, router: router)
+    }
+    
+    func setPresenter(presenter: LoginPresenter){
+        self.presenter = presenter
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // remember login
-        let defaults = UserDefaults.standard
-        guard let _ = defaults.object(forKey: "user_id"),
-              let _ = defaults.object(forKey: "user_token")
-        else{
-            buildViews()
-            return
-        }
-        self.styleViews()
-        self.presenter.presentGoodLogin()
+        // app router deals with user already logged in scenario now
+        buildViews()
     }
     
 
